@@ -48,7 +48,7 @@ app.use('/assets', express.static('dist/client/assets', { immutable: true, maxAg
 app.use(express.static('dist/client', { maxAge: '1h' }));
 
 // All SSR requests handled by React Router with Hydrogen context
-app.all('*', createRequestHandler({
+app.all('/{*path}', createRequestHandler({
     build,
     async getLoadContext(req) {
         const env = {
@@ -83,3 +83,12 @@ app.all('*', createRequestHandler({
 }));
 
 export default app;
+
+// Start the server when run directly (Render, Railway, local preview)
+const isMain = import.meta.url === `file://${process.argv[1]}`;
+if (isMain) {
+    const port = process.env.PORT ?? 3000;
+    app.listen(port, () => {
+        console.log(`Cantine server running on http://localhost:${port}`);
+    });
+}

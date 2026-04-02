@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cantine
+    runtime: node
+    buildCommand: npm ci --legacy-peer-deps && npm run build:deploy
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        sync: false
+      - key: PUBLIC_STOREFRONT_API_TOKEN
+        sync: false
+      - key: PRIVATE_STOREFRONT_API_TOKEN
+        sync: false
+      - key: PUBLIC_STORE_DOMAIN
+        sync: false
+      - key: PUBLIC_STOREFRONT_ID
+        sync: false
