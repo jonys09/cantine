@@ -2,7 +2,9 @@ import { createRequestHandler } from '@react-router/express';
 import { createHydrogenContext, InMemoryCache } from '@shopify/hydrogen';
 import { createCookieSessionStorage } from 'react-router';
 import express from 'express';
-import * as build from '../dist/server/index.js';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import * as build from './dist/index.js';
 
 // AppSession inlined as plain JS to avoid TypeScript source imports at runtime
 class AppSession {
@@ -44,8 +46,8 @@ const app = express();
 app.disable('x-powered-by');
 
 // Serve immutable hashed assets and other static files
-app.use('/assets', express.static('dist/client/assets', { immutable: true, maxAge: '1y' }));
-app.use(express.static('dist/client', { maxAge: '1h' }));
+app.use('/assets', express.static(join(dirname(fileURLToPath(import.meta.url)), '../dist/client/assets'), { immutable: true, maxAge: '1y' }));
+app.use(express.static(join(dirname(fileURLToPath(import.meta.url)), '../dist/client'), { maxAge: '1h' }));
 
 // All SSR requests handled by React Router with Hydrogen context
 app.all('/{*path}', createRequestHandler({
@@ -85,10 +87,8 @@ app.all('/{*path}', createRequestHandler({
 export default app;
 
 // Start the server when run directly (Render, Railway, local preview)
-const isMain = import.meta.url === `file://${process.argv[1]}`;
-if (isMain) {
-    const port = process.env.PORT ?? 3000;
-    app.listen(port, () => {
-        console.log(`Cantine server running on http://localhost:${port}`);
-    });
-}
+// Use PORT env var (set by Render) or fall back to 3000 for local testing
+const port = process.env.PORT ?? 3000;
+app.listen(port, () => {
+    console.log(`Cantine server running on http://localhost:${port}`);
+});

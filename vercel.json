@@ -1,11 +1,6 @@
 {
-  "buildCommand": "npm run build:vercel",
+  "buildCommand": "npm run build:deploy",
   "installCommand": "npm ci --legacy-peer-deps",
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "dist/**"
-    }
-  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index.js" }
   ]

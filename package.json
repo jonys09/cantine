@@ -7,7 +7,7 @@
   "scripts": {
     "build": "shopify hydrogen build",
     "build:vercel": "vite build --config vite.vercel.config.ts && vite build --config vite.vercel.config.ts --ssr",
-    "build:deploy": "vite build --config vite.vercel.config.ts && vite build --config vite.vercel.config.ts --ssr",
+    "build:deploy": "vite build --config vite.vercel.config.ts && vite build --config vite.vercel.config.ts --ssr && node scripts/prepare-deploy.js",
     "start": "node api/index.js",
     "dev": "shopify hydrogen dev --codegen",
     "preview": "npm run build && shopify hydrogen preview",
