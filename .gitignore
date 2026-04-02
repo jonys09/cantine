@@ -40,3 +40,4 @@ app/graphql/
 
 # Shopify / Hydrogen
 .shopify/
+.vercel

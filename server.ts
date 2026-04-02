@@ -2,6 +2,7 @@ import {
     createRequestHandler,
     createHydrogenContext,
     storefrontRedirect,
+    InMemoryCache,
 } from '@shopify/hydrogen';
 import { AppSession } from '~/lib/session.server';
 
@@ -14,11 +15,16 @@ export default {
         try {
             const session = await AppSession.init(request, [env.SESSION_SECRET]);
 
+            // Use native Cache API in Workers/Oxygen; fall back to InMemoryCache in Node.js (Vercel)
+            const cache = typeof caches !== 'undefined'
+                ? await caches.open('hydrogen')
+                : new InMemoryCache();
+
             const hydrogenContext = createHydrogenContext({
                 env,
                 request,
-                cache: await caches.open('hydrogen'),
-                waitUntil: executionContext.waitUntil.bind(executionContext),
+                cache,
+                waitUntil: executionContext?.waitUntil?.bind(executionContext) ?? (() => {}),
                 session,
                 i18n: { language: 'EN', country: 'US' },
             });
