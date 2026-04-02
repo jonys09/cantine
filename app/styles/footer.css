@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Footer — La Cantine
+   ========================================================================== */
+
+.footer {
+    background-color: var(--color-olive);
+    color: var(--color-cream);
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-10);
+}
+
+.footer-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    padding-bottom: var(--space-12);
+    border-bottom: 1px solid rgba(250,248,242,0.12);
+}
+
+@media (min-width: 600px) {
+    .footer-main {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 960px) {
+    .footer-main {
+        grid-template-columns: 2fr 1fr 1.5fr;
+        gap: var(--space-16);
+    }
+}
+
+/* Brand column */
+.footer-brand-col .footer-logo {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    color: var(--color-cream);
+    margin-bottom: var(--space-4);
+    display: block;
+}
+
+.footer-brand-col .footer-tagline {
+    font-size: var(--text-sm);
+    color: rgba(250,248,242,0.65);
+    line-height: var(--leading-relaxed);
+    max-width: 260px;
+    margin-bottom: var(--space-8);
+}
+
+.footer-social {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: rgba(250,248,242,0.7);
+    transition: color var(--duration-normal) var(--ease-out);
+}
+
+.footer-social-link:hover {
+    color: var(--color-amber-light);
+}
+
+.footer-social-link svg {
+    flex-shrink: 0;
+}
+
+/* Link columns */
+.footer-col-heading {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: rgba(250,248,242,0.45);
+    margin-bottom: var(--space-5);
+    font-weight: 500;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.footer-link {
+    font-size: var(--text-sm);
+    color: rgba(250,248,242,0.7);
+    transition: color var(--duration-normal) var(--ease-out);
+}
+
+.footer-link:hover { color: var(--color-cream); }
+
+/* Newsletter col */
+.footer-newsletter-col .footer-col-heading {
+    margin-bottom: var(--space-3);
+}
+
+.footer-newsletter-sub {
+    font-size: var(--text-sm);
+    color: rgba(250,248,242,0.6);
+    margin-bottom: var(--space-5);
+    line-height: var(--leading-relaxed);
+}
+
+.footer-form {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.footer-email-input {
+    flex: 1;
+    min-width: 140px;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid rgba(250,248,242,0.35);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-cream);
+    background: transparent;
+    transition: border-color var(--duration-normal) var(--ease-out);
+}
+
+.footer-email-input::placeholder {
+    color: rgba(250,248,242,0.4);
+}
+
+.footer-email-input:focus {
+    border-color: rgba(250,248,242,0.8);
+    outline: none;
+}
+
+.footer-submit {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-cream);
+    border-bottom: 1px solid rgba(250,248,242,0.5);
+    padding-bottom: var(--space-1);
+    background: none;
+    cursor: pointer;
+    transition: border-color var(--duration-normal) var(--ease-out),
+                color var(--duration-normal) var(--ease-out);
+    white-space: nowrap;
+}
+
+.footer-submit:hover {
+    color: var(--color-amber-light);
+    border-color: var(--color-amber-light);
+}
+
+.footer-success {
+    font-size: var(--text-sm);
+    color: var(--color-amber-light);
+}
+
+/* Bottom bar */
+.footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-8);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.footer-legal {
+    font-size: var(--text-xs);
+    color: rgba(250,248,242,0.4);
+    letter-spacing: var(--tracking-wide);
+}
+
+.footer-credit {
+    font-size: var(--text-xs);
+    color: rgba(250,248,242,0.4);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.footer-credit-link {
+    color: rgba(250,248,242,0.6);
+    transition: color var(--duration-normal) var(--ease-out);
+}
+
+.footer-credit-link:hover { color: var(--color-amber-light); }
+
+.footer-heart {
+    color: var(--color-terra-light);
+    animation: heartbeat 2.4s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14%       { transform: scale(1.2); }
+    28%       { transform: scale(1); }
+    42%       { transform: scale(1.15); }
+    56%       { transform: scale(1); }
+}
+
+/* Locale badge in footer bottom */
+.footer-locale {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: rgba(250,248,242,0.4);
+}
+
+.footer-locale svg { flex-shrink: 0; }
