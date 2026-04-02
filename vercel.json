@@ -1,7 +1,8 @@
 {
   "buildCommand": "npm run build:deploy",
   "installCommand": "npm ci --legacy-peer-deps",
+  "outputDirectory": "dist/client",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index.js" }
+    { "source": "/((?!assets/)(?!images/).*)", "destination": "/api/index.js" }
   ]
 }
