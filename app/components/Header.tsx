@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useRevalidator } from 'react-router';
 import { useI18n } from '~/lib/i18n';
 import { useCart } from '~/lib/cart';
 
@@ -27,6 +27,8 @@ export function Header({ transparent = false }: { transparent?: boolean }) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();
+
+    const revalidator = useRevalidator();
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 40);
@@ -56,6 +58,12 @@ export function Header({ transparent = false }: { transparent?: boolean }) {
 
     const isActive = (to: string) =>
         location.pathname === to || location.pathname.startsWith(to + '/');
+
+    const handleLangChange = (newLang: 'fr' | 'en') => {
+        changeLang(newLang);
+        // Force React Router to re-run all server loaders with the new Accept-Language cookie
+        if (revalidator.state === 'idle') revalidator.revalidate();
+    };
 
     return (
         <>
@@ -89,13 +97,13 @@ export function Header({ transparent = false }: { transparent?: boolean }) {
                         <div className="lang-toggle-group">
                             <button
                                 className={`lang-opt${lang === 'fr' ? ' lang-opt--active' : ''}`}
-                                onClick={() => changeLang('fr')}
+                                onClick={() => handleLangChange('fr')}
                                 aria-label="Français"
                             >FR</button>
                             <span className="lang-sep" aria-hidden="true">|</span>
                             <button
                                 className={`lang-opt${lang === 'en' ? ' lang-opt--active' : ''}`}
-                                onClick={() => changeLang('en')}
+                                onClick={() => handleLangChange('en')}
                                 aria-label="English"
                             >EN</button>
                         </div>
@@ -154,7 +162,7 @@ export function Header({ transparent = false }: { transparent?: boolean }) {
                 ))}
 
                 <div className="mobile-menu-footer">
-                    <button className="mobile-menu-lang" onClick={toggle}>
+                    <button className="mobile-menu-lang" onClick={() => handleLangChange(lang === 'fr' ? 'en' : 'fr')}>
                         {lang === 'fr' ? 'English' : 'Français'}
                     </button>
                     <div className="mobile-menu-social">

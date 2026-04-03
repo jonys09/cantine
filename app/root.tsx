@@ -1,5 +1,6 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import type { LinksFunction, MetaFunction } from 'react-router';
+import { useNonce } from '@shopify/hydrogen';
 import { I18nProvider } from '~/lib/i18n';
 import { CartProvider } from '~/lib/cart';
 import { CartDrawer } from '~/components/CartDrawer';
@@ -29,6 +30,7 @@ export const links: LinksFunction = () => [
 ];
 
 export default function App() {
+    const nonce = useNonce();
     return (
         <html lang="fr">
             <head>
@@ -44,8 +46,8 @@ export default function App() {
                         <Outlet />
                     </I18nProvider>
                 </CartProvider>
-                <ScrollRestoration />
-                <Scripts />
+                <ScrollRestoration nonce={nonce} />
+                <Scripts nonce={nonce} />
             </body>
         </html>
     );

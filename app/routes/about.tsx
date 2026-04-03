@@ -114,7 +114,7 @@ export default function About() {
                     <div className="about-split">
                         <div className="about-image image-reveal">
                             <img
-                                src="/images/Screenshot 2026-03-28 at 1.45.11 AM.png"
+                                src="/images/our_story.jpg"
                                 alt={
                                     lang === 'fr'
                                         ? "Huile d'olive La Cantine versée"

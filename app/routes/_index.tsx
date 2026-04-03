@@ -230,7 +230,7 @@ export default function Index() {
             <section className="hero" aria-label="Introduction">
                 <div className="hero-bg">
                     <img
-                        src="/images/pour.png"
+                        src="/images/Home.jpg"
                         alt="Huile d'olive Coratina La Cantine versée"
                         loading="eager"
                         fetchPriority="high"
@@ -503,7 +503,7 @@ export default function Index() {
 
                         <AnimatedSection delay={1} className="stores-visual">
                             <img
-                                src="/images/bottle.png"
+                                src="/images/yello.jpg"
                                 alt={lang === 'fr' ? "Bouteille d'huile d'olive La Cantine" : 'La Cantine olive oil bottle'}
                                 loading="lazy"
                             />
