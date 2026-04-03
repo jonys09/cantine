@@ -73,7 +73,10 @@ export default async function handleRequest(
     // that don't carry the nonce, which silently prevents React from hydrating
     // (browsers ignore 'unsafe-inline' when a nonce is present in the CSP).
     if (process.env.NODE_ENV === 'production') {
-        responseHeaders.set('Content-Security-Policy', header);
+        // Hydrogen's createContentSecurityPolicy joins multi-value directives with \n
+        // which is valid for Cloudflare Workers but Node.js/undici rejects newlines in headers
+        const sanitizedHeader = header.replace(/\n/g, ' ').replace(/\s{2,}/g, ' ').trim();
+        responseHeaders.set('Content-Security-Policy', sanitizedHeader);
     }
 
     return new Response(body, {
