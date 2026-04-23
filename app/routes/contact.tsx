@@ -26,17 +26,6 @@ const FAQ_ITEMS: FAQItem[] = [
     {
         category: { fr: 'Produits', en: 'Products' },
         question: {
-            fr: "Quelle est la différence entre une huile DOP et une huile ordinaire?",
-            en: "What is the difference between a DOP oil and a regular oil?",
-        },
-        answer: {
-            fr: "La certification DOP (Dénomination d'Origine Protégée) garantit que l'huile est produite, transformée et conditionnée dans une zone géographique précise selon des méthodes rigoureusement contrôlées. Notre Coratina est une variété emblématique des Pouilles, récoltée à la main en octobre et pressée à froid dans les 24 heures. Le résultat est une huile d'une intensité aromatique et d'une concentration en polyphénols incomparables.",
-            en: "The DOP (Protected Designation of Origin) certification guarantees that the oil is produced, processed and packaged in a specific geographic area according to rigorously controlled methods. Our Coratina is an emblematic Puglian variety, hand-harvested in October and cold-pressed within 24 hours. The result is an oil of unmatched aromatic intensity and polyphenol concentration.",
-        },
-    },
-    {
-        category: { fr: 'Produits', en: 'Products' },
-        question: {
             fr: "Qu'est-ce que la variété Coratina?",
             en: "What is the Coratina variety?",
         },
@@ -85,8 +74,8 @@ const FAQ_ITEMS: FAQItem[] = [
             en: "What are the delivery zones?",
         },
         answer: {
-            fr: "La livraison est gratuite dans la région de Longueuil, Brossard, Saint-Lambert et LaSalle. La livraison est également disponible partout au Québec pour un tarif calculé au moment du paiement selon votre adresse. Nous livrons actuellement au Canada uniquement.",
-            en: "Free delivery is available in the Longueuil, Brossard, Saint-Lambert and LaSalle areas. Delivery is also available throughout Quebec at a rate calculated at checkout based on your address. We currently deliver within Canada only.",
+            fr: "Nous livrons à travers le Canada. La livraison est offerte dès 125 $ pour le Québec et l'Ontario, et dès 150 $ pour les autres provinces. Autrement, un forfait de 15 $ s'applique.",
+            en: "We ship across Canada. Free shipping is available on orders over $125 for Québec and Ontario, and over $150 for other provinces. Otherwise, a flat rate of $15 applies.",
         },
     },
     {
@@ -96,8 +85,8 @@ const FAQ_ITEMS: FAQItem[] = [
             en: "When will I receive my order?",
         },
         answer: {
-            fr: "Pour les livraisons locales (Longueuil et environs), comptez 24 à 48 heures. Pour les livraisons dans le reste du Québec, le délai est de 3 à 5 jours ouvrables. Un numéro de suivi de colis vous sera transmis par courriel dès l'expédition de votre commande.",
-            en: "For local deliveries (Longueuil and surroundings), allow 24 to 48 hours. For deliveries to the rest of Quebec, the lead time is 3 to 5 business days. A parcel tracking number will be sent to you by email as soon as your order is shipped.",
+            fr: "Les commandes sont préparées sous 48 heures ouvrables, du lundi au vendredi. Les délais de livraison varient généralement entre 1 et 7 jours ouvrables. Un numéro de suivi vous sera transmis par courriel à l'expédition.",
+            en: "Orders are prepared within 48 business hours, Monday to Friday. Delivery typically takes between 1 to 7 business days. A tracking number will be provided by email once your order has shipped.",
         },
     },
     {
@@ -503,66 +492,47 @@ export default function Contact() {
                 </div>
             </section>
 
-            {/* ── FAQ Section ────────────────────────────────────────────────── */}
-            <section className="section faq-section">
-                <div className="container">
+            {/* ── FAQ Section — clean accordion ──────────────────────────────── */}
+            <section className="section" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                <div className="container container-narrow">
                     <AnimatedSection>
-                        <div className="faq-header">
-                            <p className="eyebrow eyebrow--olive">
-                                {lang === 'fr' ? 'Questions Fréquentes' : 'FAQ'}
-                            </p>
-                            <h2 className="heading-2">
-                                {lang === 'fr' ? 'Tout Ce Que Vous Voulez Savoir' : 'Everything You Want to Know'}
-                            </h2>
-                            <p className="faq-instructions">
-                                {lang === 'fr'
-                                    ? 'Cliquez sur une note pour lire la réponse · Jetez celles que vous avez déjà lues'
-                                    : 'Click a note to read the answer · Dismiss the ones you\'ve already read'}
-                            </p>
+                        <p className="eyebrow eyebrow--olive">
+                            {lang === 'fr' ? 'Questions Fréquentes' : 'FAQ'}
+                        </p>
+                        <h2 className="heading-2" style={{ marginBottom: 'var(--space-8)' }}>
+                            {lang === 'fr' ? 'Tout Ce Que Vous Voulez Savoir' : 'Everything You Want to Know'}
+                        </h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+                            {FAQ_ITEMS.map((item, i) => (
+                                <details
+                                    key={i}
+                                    style={{
+                                        borderBottom: '1px solid var(--color-border)',
+                                        padding: 'var(--space-4) 0',
+                                    }}
+                                >
+                                    <summary
+                                        style={{
+                                            cursor: 'pointer',
+                                            fontWeight: 500,
+                                            fontSize: 'var(--text-base)',
+                                            listStyle: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            gap: 'var(--space-4)',
+                                        }}
+                                    >
+                                        <span>{item.question[lang]}</span>
+                                        <span style={{ color: 'var(--color-olive)', flexShrink: 0, fontSize: '1.2rem' }}>+</span>
+                                    </summary>
+                                    <p style={{ marginTop: 'var(--space-3)', color: 'var(--color-gray)', lineHeight: 1.7 }}>
+                                        {item.answer[lang]}
+                                    </p>
+                                </details>
+                            ))}
                         </div>
                     </AnimatedSection>
-
-                    <div className="faq-notes-scatter">
-                        {FAQ_ITEMS.map((item, i) => (
-                            <StickyNote
-                                key={i}
-                                index={i}
-                                category={item.category[lang]}
-                                question={item.question[lang]}
-                                answer={item.answer[lang]}
-                                isThrown={thrown.has(i)}
-                                isThrowing={throwing.has(i)}
-                                onThrow={handleThrow}
-                                lang={lang}
-                            />
-                        ))}
-                    </div>
-
-                    {thrown.size > 0 && (
-                        <div className="faq-discard-zone">
-                            <div className="faq-discard-papers" aria-hidden="true">
-                                {Array.from(thrown).slice(0, 4).map((noteIdx, i) => (
-                                    <div
-                                        key={noteIdx}
-                                        className="faq-discarded-paper"
-                                        style={{
-                                            '--note-bg': NOTE_PALETTE[noteIdx % NOTE_PALETTE.length].bg,
-                                            '--discard-rot': `${DISCARD_ROTS[i % DISCARD_ROTS.length]}deg`,
-                                        } as React.CSSProperties}
-                                    />
-                                ))}
-                            </div>
-                            <p>
-                                {thrown.size}&nbsp;
-                                {lang === 'fr'
-                                    ? `note${thrown.size > 1 ? 's' : ''} rejetée${thrown.size > 1 ? 's' : ''}`
-                                    : `note${thrown.size > 1 ? 's' : ''} dismissed`}
-                            </p>
-                            <button className="faq-restore-btn" onClick={restoreAll} type="button">
-                                {lang === 'fr' ? '↩ Tout restaurer' : '↩ Restore all'}
-                            </button>
-                        </div>
-                    )}
                 </div>
             </section>
 

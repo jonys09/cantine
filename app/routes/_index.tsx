@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => [
     {
         name: 'description',
         content:
-            "Huile d'olive Coratina DOP des Pouilles, pressée à froid. Notes herbacées, polyphénols exceptionnels. Livraison au Québec.",
+            "Huile d'olive 100% Coratina des Pouilles, pressée à froid. Polyphénols exceptionnels. Livraison au Canada.",
     },
 ];
 
@@ -38,6 +38,9 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
                                     node {
                                         id handle title description
                                         featuredImage { url altText }
+                                        images(first: 2) {
+                                            edges { node { url altText } }
+                                        }
                                         variants(first: 1) {
                                             edges {
                                                 node {
@@ -68,59 +71,26 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     return { shopifyProducts: [] };
 }
 
-const REVIEWS = [
-    {
-        quote: {
-            fr: "Une huile d'une qualité exceptionnelle. Son goût fruité et légèrement amer est parfaitement équilibré. Je ne peux plus m'en passer.",
-            en: "An exceptionally high-quality oil. Its fruity, slightly bitter taste is perfectly balanced. I can't live without it anymore.",
-        },
-        name: 'Marie-Claude B.',
-        location: 'Montréal',
-        initials: 'MB',
-        avatarColor: '#C4603A',
-    },
-    {
-        quote: {
-            fr: "J'ai découvert La Cantine grâce à un ami. Depuis, impossible de revenir à une huile ordinaire. La différence est flagrante.",
-            en: "I discovered La Cantine through a friend. Since then, it's impossible to go back to a regular oil. The difference is striking.",
-        },
-        name: 'Jean-François D.',
-        location: 'Longueuil',
-        initials: 'JD',
-        avatarColor: '#2B3D1A',
-    },
-    {
-        quote: {
-            fr: 'Le coffret 3 bouteilles est le cadeau parfait pour les amateurs de bonne cuisine. Tout le monde a adoré.',
-            en: 'The 3-bottle bundle is the perfect gift for food lovers. Everyone loved it.',
-        },
-        name: 'Sophie M.',
-        location: 'Brossard',
-        initials: 'SM',
-        avatarColor: '#C49A3C',
-    },
-];
-
 const MARQUEE_ITEMS = {
     fr: [
-        'CORATINA DOP',
+        '100% CORATINA',
         'PRESSÉE À FROID',
         'POUILLES, ITALIE',
         'POLYPHÉNOLS ÉLEVÉS',
         'ACIDITÉ < 0,3 %',
         'RÉCOLTE À LA MAIN',
-        'CERTIFICATION BIOLOGIQUE',
-        'LIVRAISON RAPIDE',
+        'ARTISANAL',
+        'LIVRAISON AU CANADA',
     ],
     en: [
-        'CORATINA DOP',
+        '100% CORATINA',
         'COLD-PRESSED',
         'PUGLIA, ITALY',
         'HIGH POLYPHENOLS',
         'ACIDITY < 0.3%',
         'HAND-HARVESTED',
-        'ORGANIC CERTIFIED',
-        'FAST DELIVERY',
+        'ARTISANAL',
+        'CANADA SHIPPING',
     ],
 };
 
@@ -135,10 +105,10 @@ export default function Index() {
             key: 'single',
             name: t('product_single_name'),
             size: t('product_single_size'),
-            desc: t('product_single_desc'),
-            price: lang === 'fr' ? '28 $' : '$28',
-            priceNum: 28,
+            price: lang === 'fr' ? '35 $' : '$35',
+            priceNum: 35,
             image: '/images/bottle.png',
+            hoverImage: '/images/our_story_bottle.jpg',
             badge: null,
             variantId: null,
         },
@@ -146,22 +116,11 @@ export default function Index() {
             key: 'bundle',
             name: t('product_bundle_name'),
             size: t('product_bundle_size'),
-            desc: t('product_bundle_desc'),
-            price: lang === 'fr' ? '72 $' : '$72',
-            priceNum: 72,
+            price: lang === 'fr' ? '90 $' : '$90',
+            priceNum: 90,
             image: '/images/bundle.png',
+            hoverImage: '/images/bottle_tomato.jpg',
             badge: t('product_bundle_badge'),
-            variantId: null,
-        },
-        {
-            key: 'pourer',
-            name: t('product_pourer_name'),
-            size: t('product_pourer_size'),
-            desc: t('product_pourer_desc'),
-            price: lang === 'fr' ? '14 $' : '$14',
-            priceNum: 14,
-            image: null,
-            badge: null,
             variantId: null,
         },
     ];
@@ -169,47 +128,21 @@ export default function Index() {
     // Map Shopify products if available, otherwise use fallback
     const products = shopifyProducts.length > 0
         ? shopifyProducts.map((edge: any) => {
+            const imgEdges = edge.node.images?.edges || [];
             const priceAmt = parseFloat(edge.node.variants?.edges?.[0]?.node?.price?.amount || '0');
             return {
                 key: edge.node.handle,
                 name: edge.node.title,
                 size: '',
-                desc: edge.node.description || '',
                 price: lang === 'fr' ? `${priceAmt.toFixed(2)} $` : `$${priceAmt.toFixed(2)}`,
                 priceNum: priceAmt,
-                image: edge.node.featuredImage?.url || null,
+                image: imgEdges[0]?.node?.url || edge.node.featuredImage?.url || null,
+                hoverImage: imgEdges[1]?.node?.url || null,
                 badge: null,
                 variantId: edge.node.variants?.edges?.[0]?.node?.id || null,
             };
         })
         : fallbackProducts;
-
-    const recipes = [
-        {
-            title: t('recipe1_title'),
-            excerpt: t('recipe1_excerpt'),
-            time: t('recipe1_time'),
-            category: t('recipe1_category'),
-            slug: 'bruschetta-huile-olive-coratina',
-            image: '/images/bundle.png',
-        },
-        {
-            title: t('recipe2_title'),
-            excerpt: t('recipe2_excerpt'),
-            time: t('recipe2_time'),
-            category: t('recipe2_category'),
-            slug: 'salade-mediterraneenne-vinaigrette-coratina',
-            image: '/images/salad.png',
-        },
-        {
-            title: t('recipe3_title'),
-            excerpt: t('recipe3_excerpt'),
-            time: t('recipe3_time'),
-            category: t('recipe3_category'),
-            slug: 'pasta-aglio-e-olio',
-            image: '/images/pasta.png',
-        },
-    ];
 
     const marqueeContent = (
         <span className="qs-set" aria-hidden="true">
@@ -241,7 +174,10 @@ export default function Index() {
                 <div className="hero-content container">
                     <p className="eyebrow">{t('hero_eyebrow')}</p>
                     <h1 className="heading-display hero-headline">{t('hero_headline')}</h1>
-                    <p className="hero-sub">{t('hero_sub')}</p>
+
+                    <p style={{ fontSize: 'var(--text-sm)', color: 'rgba(250,248,242,0.70)', fontStyle: 'italic', marginTop: 'var(--space-2)', marginBottom: 'var(--space-2)', letterSpacing: '0.02em' }}>
+                        {t('hero_tagline')}
+                    </p>
                     <div className="hero-cta-row">
                         <Link to="/shop" className="btn btn-cream">
                             {t('hero_cta')}
@@ -279,7 +215,23 @@ export default function Index() {
                             <article key={product.key} className="product-card">
                                 <div className="product-card-image">
                                     {product.image ? (
-                                        <img src={product.image} alt={product.name} loading="lazy" />
+                                        <>
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                loading="lazy"
+                                                className="product-img-primary"
+                                            />
+                                            {product.hoverImage && (
+                                                <img
+                                                    src={product.hoverImage}
+                                                    alt={`${product.name} — vue alternative`}
+                                                    loading="lazy"
+                                                    className="product-img-hover"
+                                                    aria-hidden="true"
+                                                />
+                                            )}
+                                        </>
                                     ) : (
                                         <div className="product-card-image-placeholder" aria-label={product.name}>
                                             🫙
@@ -299,7 +251,6 @@ export default function Index() {
                                         </div>
                                         <span className="product-card-price">{product.price}</span>
                                     </div>
-                                    <p className="product-card-desc">{product.desc}</p>
                                     <div className="product-card-footer">
                                         <button
                                             className="btn btn-filled"
@@ -315,7 +266,7 @@ export default function Index() {
                                         >
                                             {t('product_cta')}
                                         </button>
-                                        <Link to="/shop" className="cta-link">
+                                        <Link to={`/products/${product.key}`} className="cta-link">
                                             {t('product_view')} <span className="arrow">→</span>
                                         </Link>
                                     </div>
@@ -330,14 +281,14 @@ export default function Index() {
             <div className="features-strip">
                 <div className="container">
                     <StaggerContainer className="features-grid">
-                        {/* DOP Certified */}
+                        {/* Variety */}
                         <div className="feature-item">
                             <svg className="feature-icon" viewBox="0 0 38 38" fill="none" aria-hidden="true">
                                 <circle cx="19" cy="19" r="16" stroke="currentColor" strokeWidth="1.2" />
                                 <path d="M13 19l4 4 8-8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                             <div>
-                                <p className="feature-title">Coratina DOP</p>
+                                <p className="feature-title">100% Coratina</p>
                                 <p className="feature-sub">{lang === 'fr' ? 'Variété emblématique des Pouilles' : 'Iconic Puglian variety'}</p>
                             </div>
                         </div>
@@ -373,8 +324,8 @@ export default function Index() {
                                 <circle cx="26" cy="26" r="3" stroke="currentColor" strokeWidth="1.2" />
                             </svg>
                             <div>
-                                <p className="feature-title">{lang === 'fr' ? 'Livraison gratuite' : 'Free Delivery'}</p>
-                                <p className="feature-sub">{lang === 'fr' ? 'Région de Longueuil' : 'Longueuil area'}</p>
+                                <p className="feature-title">{lang === 'fr' ? 'Livraison au Canada' : 'Canada-Wide Shipping'}</p>
+                                <p className="feature-sub">{lang === 'fr' ? '1–7 jours ouvrables' : '1–7 business days'}</p>
                             </div>
                         </div>
                     </StaggerContainer>
@@ -415,59 +366,11 @@ export default function Index() {
 
                         <AnimatedSection delay={1} className="story-image">
                             <img
-                                src="/images/artichokes.png"
-                                alt={lang === 'fr' ? 'Artichokes rôtis avec huile La Cantine' : 'Roasted artichokes with La Cantine olive oil'}
+                                src="/images/our_story_bottle.jpg"
+                                alt={lang === 'fr' ? "Bouteille d'huile La Cantine avec tomates" : 'La Cantine olive oil bottle with tomatoes'}
                                 loading="lazy"
                             />
                         </AnimatedSection>
-                    </div>
-                </div>
-            </section>
-
-            {/* ── Recipes ───────────────────────────────────────────────────── */}
-            <section className="section recipes-section">
-                <div className="container">
-                    <div className="recipes-header">
-                        <AnimatedSection>
-                            <p className="eyebrow">{t('recipes_eyebrow')}</p>
-                            <h2 className="heading-2">{t('recipes_heading')}</h2>
-                        </AnimatedSection>
-                        <AnimatedSection delay={1} className="hide-mobile">
-                            <Link to="/recipes" className="cta-link">
-                                {t('recipes_cta')} <span className="arrow">→</span>
-                            </Link>
-                        </AnimatedSection>
-                    </div>
-
-                    <StaggerContainer className="recipes-grid">
-                        {recipes.map(recipe => (
-                            <Link key={recipe.slug} to={`/recipes/${recipe.slug}`} className="recipe-card">
-                                <div className="recipe-card-image">
-                                    <img src={recipe.image} alt={recipe.title} loading="lazy" />
-                                </div>
-                                <div className="recipe-card-body">
-                                    <div className="recipe-card-meta">
-                                        <span>{recipe.category}</span>
-                                        <span className="dot-separator" aria-hidden="true" />
-                                        <span>{recipe.time}</span>
-                                    </div>
-                                    <h3 className="recipe-card-title">{recipe.title}</h3>
-                                    <p className="recipe-card-excerpt">{recipe.excerpt}</p>
-                                    <div className="recipe-card-link">
-                                        <span className="cta-link">
-                                            {lang === 'fr' ? 'Voir la recette' : 'View recipe'}{' '}
-                                            <span className="arrow">→</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </StaggerContainer>
-
-                    <div style={{ textAlign: 'center', marginTop: 'var(--space-12)' }}>
-                        <Link to="/recipes" className="btn">
-                            {t('recipes_cta')}
-                        </Link>
                     </div>
                 </div>
             </section>
@@ -512,65 +415,8 @@ export default function Index() {
                 </div>
             </section>
 
-            {/* ── Reviews ───────────────────────────────────────────────────── */}
-            <section className="section reviews-section">
-                <div className="container">
-                    <AnimatedSection className="reviews-header">
-                        <p className="eyebrow">{t('reviews_eyebrow')}</p>
-                        <h2 className="heading-2">{t('reviews_heading')}</h2>
-                    </AnimatedSection>
-
-                    <AnimatedSection>
-                        <div className="reviews-stats">
-                            <div className="reviews-stat">
-                                <span className="reviews-stat-num">4.9 <span className="reviews-stat-star">★</span></span>
-                                <span className="reviews-stat-label">{lang === 'fr' ? 'Note moyenne' : 'Average rating'}</span>
-                            </div>
-                            <div className="reviews-stat-divider" aria-hidden="true" />
-                            <div className="reviews-stat">
-                                <span className="reviews-stat-num">500+</span>
-                                <span className="reviews-stat-label">{lang === 'fr' ? 'Clients satisfaits' : 'Happy clients'}</span>
-                            </div>
-                            <div className="reviews-stat-divider" aria-hidden="true" />
-                            <div className="reviews-stat">
-                                <span className="reviews-stat-num">100%</span>
-                                <span className="reviews-stat-label">{lang === 'fr' ? 'Artisanal' : 'Artisanal'}</span>
-                            </div>
-                        </div>
-                    </AnimatedSection>
-
-                    <StaggerContainer className="reviews-grid">
-                        {REVIEWS.map(review => (
-                            <div key={review.name} className="review-card">
-                                <div className="review-stars" aria-label="5 étoiles">
-                                    {[0, 1, 2, 3, 4].map(i => (
-                                        <span
-                                            key={i}
-                                            className="review-star"
-                                            style={{ '--star-i': i } as React.CSSProperties}
-                                            aria-hidden="true"
-                                        >★</span>
-                                    ))}
-                                </div>
-                                <p className="review-quote">"{review.quote[lang]}"</p>
-                                <div className="review-author">
-                                    <div
-                                        className="review-avatar"
-                                        style={{ '--avatar-color': review.avatarColor } as React.CSSProperties}
-                                        aria-hidden="true"
-                                    >
-                                        {review.initials}
-                                    </div>
-                                    <div>
-                                        <p className="review-name">{review.name}</p>
-                                        <p className="review-location">{review.location}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </StaggerContainer>
-                </div>
-            </section>
+            {/* Reviews removed per client request */}
+            {/* Recettes section removed from homepage per client request — accessible via /recipes nav */}
 
             <Footer />
         </>

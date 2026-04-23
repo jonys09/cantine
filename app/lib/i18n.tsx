@@ -23,8 +23,8 @@ const translations = {
         products_eyebrow: 'Sélection Artisanale',
         product_single_name: 'Huile d\'Olive Coratina',
         product_single_size: '500 ml',
-        product_single_desc: 'Notre huile signature. Coratina DOP des Pouilles, pressée à froid. Notes d\'herbe fraîche, tomate et artichaut avec une légère amertume équilibrée.',
-        product_bundle_name: 'Coffret 3 Bouteilles',
+        product_single_desc: 'Notre huile signature 100% Coratina des Pouilles.',
+        product_bundle_name: 'Trio de 3 bouteilles',
         product_bundle_size: '3 × 500 ml',
         product_bundle_desc: 'Le choix idéal pour les amateurs ou pour offrir. Économisez tout en partageant l\'excellence de nos Pouilles.',
         product_bundle_badge: 'Meilleure Valeur',
@@ -36,9 +36,9 @@ const translations = {
 
         // Story
         story_eyebrow: 'Notre Histoire',
-        story_heading: 'Né d\'une passion pour l\'authenticité',
+        story_heading: 'Née d\'une passion pour l\'authenticité',
         story_p1: 'La Cantine est née en 2023 d\'un désir simple : apporter au Québec l\'excellence de l\'huile d\'olive italienne artisanale. Chaque bouteille raconte l\'histoire des oliveraies centenaires des Pouilles.',
-        story_p2: 'Notre Coratina, variété emblématique de la région, est récoltée à la main et pressée à froid dans le moulin Panorama Pieralisi. Le résultat : une huile d\'une pureté et d\'une intensité incomparables, certifiée DOP.',
+        story_p2: 'Notre Coratina, variété emblématique de la région, est manipulée à la main et pressée à froid dans le moulin Panorama Pieralisi. Le résultat : une huile d\'une pureté et d\'une intensité incomparables.',
         story_cta: 'Lire notre histoire',
         story_stat1_num: '2023',
         story_stat1_label: 'Fondation',
@@ -67,13 +67,13 @@ const translations = {
         recipe3_category: 'Pâtes',
 
         // Stores
-        stores_eyebrow: 'Disponible Localement',
+        stores_eyebrow: 'Livraison partout au Canada',
         stores_heading: 'Nous Trouver',
-        stores_sub: 'Disponible à Longueuil et dans les environs. Livraison gratuite dans la région.',
-        stores_delivery_title: 'Livraison Gratuite',
-        stores_delivery_desc: 'Livraison à domicile offerte dans la région de Longueuil et ses environs.',
+        stores_sub: 'Nous livrons à travers le Canada. Livraison offerte dès 125 $ (QC & ON) ou 150 $ (autres provinces).',
+        stores_delivery_title: 'Livraison au Canada',
+        stores_delivery_desc: 'Commandes préparées sous 48h ouvrables. Délais : 1 à 7 jours ouvrables.',
         stores_online_title: 'Commande en Ligne',
-        stores_online_desc: 'Commandez directement sur notre boutique et recevez votre huile en 48h.',
+        stores_online_desc: 'Commandez directement sur notre boutique en ligne et recevez votre huile.',
         stores_cta: 'Commander maintenant',
 
         // Reviews
@@ -88,15 +88,20 @@ const translations = {
         newsletter_success: 'Merci ! Vous êtes maintenant abonné.',
 
         // Footer
-        footer_tagline: 'L\'excellence de l\'artisanat des Pouilles, livrée au Québec.',
+        footer_tagline: 'L\'excellence de l\'artisanat des Pouilles, livrée au Canada.',
         footer_shop: 'Boutique',
         footer_company: 'La Compagnie',
         footer_follow: 'Nous Suivre',
         footer_legal: 'Tous droits réservés.',
+        footer_livraison: 'Livraison',
+
+        // Hero tagline
+        hero_tagline: 'Une histoire de famille, de terre et de temps.',
 
         // About
         about_title: 'Notre Histoire',
         about_subtitle: 'De Puglia au Québec — une passion transmise en bouteille.',
+        nav_livraison: 'Livraison',
 
         // Cart
         cart_title: 'Votre Panier',
@@ -139,8 +144,8 @@ const translations = {
         products_eyebrow: 'Artisanal Selection',
         product_single_name: 'Coratina Olive Oil',
         product_single_size: '500 ml',
-        product_single_desc: 'Our signature oil. DOP Coratina from Puglia, cold-pressed. Notes of fresh grass, tomato and artichoke with a balanced slight bitterness.',
-        product_bundle_name: 'Bundle of 3 Bottles',
+        product_single_desc: 'Our signature oil 100% Coratina from Puglia.',
+        product_bundle_name: 'Trio of 3 Bottles',
         product_bundle_size: '3 × 500 ml',
         product_bundle_desc: 'The perfect choice for aficionados or as a gift. Save while sharing the excellence of our Puglia olive oil.',
         product_bundle_badge: 'Best Value',
@@ -154,7 +159,7 @@ const translations = {
         story_eyebrow: 'Our Story',
         story_heading: 'Born from a passion for authenticity',
         story_p1: 'La Cantine was born in 2023 from a simple desire: to bring the excellence of artisanal Italian olive oil to Québec. Each bottle tells the story of the century-old olive groves of Puglia.',
-        story_p2: 'Our Coratina, the iconic variety of the region, is hand-harvested and cold-pressed at the Panorama Pieralisi mill. The result: an oil of unparalleled purity and intensity, DOP certified.',
+        story_p2: 'Our Coratina, the iconic variety of the region, is hand-harvested and cold-pressed at the Panorama Pieralisi mill. The result: an oil of unparalleled purity and intensity.',
         story_cta: 'Read our story',
         story_stat1_num: '2023',
         story_stat1_label: 'Founded',
@@ -183,13 +188,13 @@ const translations = {
         recipe3_category: 'Pasta',
 
         // Stores
-        stores_eyebrow: 'Available Locally',
+        stores_eyebrow: 'Delivered Across Canada',
         stores_heading: 'Find Us',
-        stores_sub: 'Available in Longueuil and surrounding areas. Free delivery in the region.',
-        stores_delivery_title: 'Free Delivery',
-        stores_delivery_desc: 'Free home delivery in the Longueuil area and surroundings.',
+        stores_sub: 'We ship across Canada. Free shipping from $125 (QC & ON) or $150 (other provinces).',
+        stores_delivery_title: 'Shipping to Canada',
+        stores_delivery_desc: 'Orders prepared within 48 business hours. Delivery: 1 to 7 business days.',
         stores_online_title: 'Order Online',
-        stores_online_desc: 'Order directly from our store and receive your oil within 48 hours.',
+        stores_online_desc: 'Order directly from our online store and receive your oil.',
         stores_cta: 'Order now',
 
         // Reviews
@@ -204,15 +209,20 @@ const translations = {
         newsletter_success: 'Thank you! You are now subscribed.',
 
         // Footer
-        footer_tagline: 'The excellence of Puglian craftsmanship, delivered to Québec.',
+        footer_tagline: 'The excellence of Puglian craftsmanship, delivered across Canada.',
         footer_shop: 'Shop',
         footer_company: 'Company',
         footer_follow: 'Follow Us',
         footer_legal: 'All rights reserved.',
+        footer_livraison: 'Shipping',
+
+        // Hero tagline
+        hero_tagline: 'A story of family, land, and time.',
 
         // About
         about_title: 'Our Story',
         about_subtitle: 'From Puglia to Québec — a passion bottled.',
+        nav_livraison: 'Shipping',
 
         // Cart
         cart_title: 'Your Cart',

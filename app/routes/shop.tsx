@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => [
     {
         name: 'description',
         content:
-            "Commandez l'huile d'olive Coratina DOP de La Cantine. Livraison gratuite au Québec.",
+            "Commandez l'huile d'olive 100% Coratina de La Cantine. Livraison au Canada.",
     },
 ];
 
@@ -90,17 +90,17 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 }
 
 const FEATURES_FR = [
-    { icon: '🫒', title: 'DOP Certifiée', desc: 'Dénomination d\'Origine Protégée' },
+    { icon: '🫒', title: '100% Coratina', desc: 'Variété emblématique des Pouilles' },
     { icon: '🧊', title: 'Pressée à Froid', desc: 'Première pression dans les 24h' },
     { icon: '🌿', title: 'Polyphénols', desc: 'Concentration exceptionnelle' },
-    { icon: '🚚', title: 'Livraison Gratuite', desc: 'Région de Longueuil' },
+    { icon: '🚚', title: 'Livraison au Canada', desc: '1–7 jours ouvrables' },
 ];
 
 const FEATURES_EN = [
-    { icon: '🫒', title: 'DOP Certified', desc: 'Protected Designation of Origin' },
+    { icon: '🫒', title: '100% Coratina', desc: 'Iconic Puglian variety' },
     { icon: '🧊', title: 'Cold Pressed', desc: 'First press within 24 hours' },
     { icon: '🌿', title: 'Polyphenols', desc: 'Exceptional concentration' },
-    { icon: '🚚', title: 'Free Delivery', desc: 'Longueuil region' },
+    { icon: '🚚', title: 'Canada Shipping', desc: '1–7 business days' },
 ];
 
 export default function Shop() {
@@ -117,7 +117,7 @@ export default function Shop() {
             name: t('product_single_name'),
             size: t('product_single_size'),
             desc: t('product_single_desc'),
-            price: lang === 'fr' ? '28 $' : '$28',
+            price: lang === 'fr' ? '35 $' : '$35',
             priceNote: lang === 'fr' ? '+ taxes' : '+ taxes',
             image: '/images/bottle.png',
             badge: null,
@@ -130,26 +130,13 @@ export default function Shop() {
             name: t('product_bundle_name'),
             size: t('product_bundle_size'),
             desc: t('product_bundle_desc'),
-            price: lang === 'fr' ? '72 $' : '$72',
-            priceNote: lang === 'fr' ? 'Économisez 12 $' : 'Save $12',
+            price: lang === 'fr' ? '90 $' : '$90',
+            priceNote: lang === 'fr' ? 'Économisez 15 $' : 'Save $15',
             image: '/images/bundle.png',
             badge: t('product_bundle_badge'),
             details: lang === 'fr'
-                ? ['3 × 500 ml', 'Idéal pour offrir', 'Livraison gratuite incluse', 'Économie de 12 $']
-                : ['3 × 500 ml', 'Perfect as a gift', 'Free shipping included', 'Save $12'],
-        },
-        {
-            key: 'pourer',
-            name: t('product_pourer_name'),
-            size: t('product_pourer_size'),
-            desc: t('product_pourer_desc'),
-            price: lang === 'fr' ? '14 $' : '$14',
-            priceNote: '',
-            image: null,
-            badge: null,
-            details: lang === 'fr'
-                ? ['Acier inoxydable', 'Compatible 500 ml', 'Bec anti-gouttes', 'Bouchon inclus']
-                : ['Stainless steel', 'Compatible 500 ml', 'Drip-free spout', 'Cap included'],
+                ? ['3 × 500 ml', 'Idéal pour offrir', 'Livraison include', 'Économie de 15 $']
+                : ['3 × 500 ml', 'Perfect as a gift', 'Shipping included', 'Save $15'],
         },
     ];
 
@@ -379,16 +366,16 @@ export default function Shop() {
                                     label: lang === 'fr' ? 'Paiement sécurisé' : 'Secure payment',
                                 },
                                 {
-                                    icon: '🔄',
-                                    label: lang === 'fr' ? 'Satisfaction garantie' : 'Satisfaction guaranteed',
-                                },
-                                {
                                     icon: '📦',
                                     label: lang === 'fr' ? 'Emballage protecteur' : 'Protective packaging',
                                 },
                                 {
                                     icon: '🇮🇹',
                                     label: lang === 'fr' ? 'Importé d\'Italie' : 'Imported from Italy',
+                                },
+                                {
+                                    icon: '🚚',
+                                    label: lang === 'fr' ? 'Livraison au Canada' : 'Canada-wide shipping',
                                 },
                             ].map(item => (
                                 <div

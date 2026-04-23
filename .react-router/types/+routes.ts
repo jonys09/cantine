@@ -14,11 +14,10 @@ type Pages = {
   "/": {
     params: {};
   };
-  "/api/checkout": {
-    params: {};
-  };
-  "/contact": {
-    params: {};
+  "/products/:handle": {
+    params: {
+      "handle": string;
+    };
   };
   "/recipes": {
     params: {};
@@ -27,6 +26,15 @@ type Pages = {
     params: {
       "slug": string;
     };
+  };
+  "/api/checkout": {
+    params: {};
+  };
+  "/livraison": {
+    params: {};
+  };
+  "/contact": {
+    params: {};
   };
   "/about": {
     params: {};
@@ -48,23 +56,31 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/checkout" | "/contact" | "/recipes" | "/recipes/:slug" | "/about" | "/shop" | "/graphiql" | "/subrequest-profiler" | "/.well-known/appspecific/com.chrome.devtools.json";
+    page: "/" | "/products/:handle" | "/recipes" | "/recipes/:slug" | "/api/checkout" | "/livraison" | "/contact" | "/about" | "/shop" | "/graphiql" | "/subrequest-profiler" | "/.well-known/appspecific/com.chrome.devtools.json";
+  };
+  "routes/products.$handle.tsx": {
+    id: "routes/products.$handle";
+    page: "/products/:handle";
+  };
+  "routes/recipes._index.tsx": {
+    id: "routes/recipes._index";
+    page: "/recipes";
+  };
+  "routes/recipes.$slug.tsx": {
+    id: "routes/recipes.$slug";
+    page: "/recipes/:slug";
   };
   "routes/api.checkout.tsx": {
     id: "routes/api.checkout";
     page: "/api/checkout";
   };
+  "routes/livraison.tsx": {
+    id: "routes/livraison";
+    page: "/livraison";
+  };
   "routes/contact.tsx": {
     id: "routes/contact";
     page: "/contact";
-  };
-  "routes/recipes.tsx": {
-    id: "routes/recipes";
-    page: "/recipes" | "/recipes/:slug";
-  };
-  "routes/recipes.$slug.tsx": {
-    id: "routes/recipes.$slug";
-    page: "/recipes/:slug";
   };
   "routes/_index.tsx": {
     id: "routes/_index";
@@ -102,10 +118,12 @@ type RouteFiles = {
 
 type RouteModules = {
   "root": typeof import("./app/root.tsx");
-  "routes/api.checkout": typeof import("./app/routes/api.checkout.tsx");
-  "routes/contact": typeof import("./app/routes/contact.tsx");
-  "routes/recipes": typeof import("./app/routes/recipes.tsx");
+  "routes/products.$handle": typeof import("./app/routes/products.$handle.tsx");
+  "routes/recipes._index": typeof import("./app/routes/recipes._index.tsx");
   "routes/recipes.$slug": typeof import("./app/routes/recipes.$slug.tsx");
+  "routes/api.checkout": typeof import("./app/routes/api.checkout.tsx");
+  "routes/livraison": typeof import("./app/routes/livraison.tsx");
+  "routes/contact": typeof import("./app/routes/contact.tsx");
   "routes/_index": typeof import("./app/routes/_index.tsx");
   "routes/about": typeof import("./app/routes/about.tsx");
   "routes/shop": typeof import("./app/routes/shop.tsx");
