@@ -37,12 +37,20 @@ export default async function handleRequest(
             "http://localhost:*",
             "data:",
             "https://images.unsplash.com",
+            "https://*.pinterest.com",
+            "https://*.pinimg.com",
         ],
         scriptSrc: [
             "'self'",
             "https://cdn.shopify.com",
             "https://shopify.com",
             "http://localhost:*",
+            "https://assets.pinterest.com",
+            "https://*.pinterest.com",
+        ],
+        frameSrc: [
+            "'self'",
+            "https://*.pinterest.com",
         ],
         shop: {
             checkoutDomain: (context.env as any).PUBLIC_STORE_DOMAIN || '',
