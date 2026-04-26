@@ -5,6 +5,7 @@ import { Footer } from '~/components/Footer';
 import { useI18n } from '~/lib/i18n';
 import { AnimatedSection, StaggerContainer } from '~/lib/animations';
 import { useCart } from '~/lib/cart';
+import { PinterestBoard } from '~/components/PinterestBoard';
 
 export const meta: MetaFunction = () => [
     { title: "La Cantine — Huile d'Olive Premium des Pouilles" },
@@ -416,7 +417,8 @@ export default function Index() {
             </section>
 
             {/* Reviews removed per client request */}
-            {/* Recettes section removed from homepage per client request — accessible via /recipes nav */}
+            {/* ── Pinterest Moodboard ───────────────────────────────────────── */}
+            <PinterestBoard />
 
             <Footer />
         </>
