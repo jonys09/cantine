@@ -36,6 +36,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
 
     if (env.PUBLIC_STOREFRONT_API_TOKEN && env.PUBLIC_STORE_DOMAIN && handle) {
         try {
+            const languageCode = cookieLang === 'en' ? 'EN' : 'FR';
             const response = await fetch(
                 `https://${env.PUBLIC_STORE_DOMAIN}/api/2024-01/graphql.json`,
                 {
@@ -47,7 +48,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
                     },
                     body: JSON.stringify({
                         query: `
-                            query ProductByHandle($handle: String!) {
+                            query ProductByHandle($handle: String!, $language: LanguageCode) @inContext(language: $language) {
                                 product(handle: $handle) {
                                     id handle title
                                     description(truncateAt: 2000)
@@ -69,7 +70,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
                                 }
                             }
                         `,
-                        variables: { handle },
+                        variables: { handle, language: languageCode },
                     }),
                 }
             );
@@ -194,13 +195,33 @@ export default function ProductDetail() {
                             {/* Main image */}
                             <div className="pdp-main-image">
                                 {product.images.length > 0 ? (
-                                    <img
-                                        key={activeImage}
-                                        src={product.images[activeImage].url}
-                                        alt={product.images[activeImage].altText ?? product.title}
-                                        loading="eager"
-                                        className="pdp-main-img"
-                                    />
+                                    <>
+                                        <img
+                                            key={activeImage}
+                                            src={product.images[activeImage].url}
+                                            alt={product.images[activeImage].altText ?? product.title}
+                                            loading="eager"
+                                            className="pdp-main-img"
+                                        />
+                                        {product.images.length > 1 && (
+                                            <>
+                                                <button
+                                                    className="pdp-nav-arrow pdp-nav-prev"
+                                                    onClick={() => setActiveImage(prev => (prev === 0 ? product.images.length - 1 : prev - 1))}
+                                                    aria-label="Previous image"
+                                                >
+                                                    &larr;
+                                                </button>
+                                                <button
+                                                    className="pdp-nav-arrow pdp-nav-next"
+                                                    onClick={() => setActiveImage(prev => (prev === product.images.length - 1 ? 0 : prev + 1))}
+                                                    aria-label="Next image"
+                                                >
+                                                    &rarr;
+                                                </button>
+                                            </>
+                                        )}
+                                    </>
                                 ) : (
                                     <div className="pdp-no-image">🫙</div>
                                 )}
@@ -335,9 +356,9 @@ export default function ProductDetail() {
                             </div>
 
                             {/* Tags */}
-                            {product.tags.length > 0 && (
+                            {product.tags.filter(tag => tag !== 'DOP').length > 0 && (
                                 <div className="pdp-tags">
-                                    {product.tags.map(tag => (
+                                    {product.tags.filter(tag => tag !== 'DOP').map(tag => (
                                         <span key={tag} className="pdp-tag">{tag}</span>
                                     ))}
                                 </div>
