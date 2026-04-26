@@ -1,6 +1,6 @@
 import type { MetaFunction, LoaderFunctionArgs } from 'react-router';
-import { Link, useLoaderData, useParams } from 'react-router';
-import { useState } from 'react';
+import { Link, useLoaderData } from 'react-router';
+import { useState, useCallback } from 'react';
 import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
 import { useI18n } from '~/lib/i18n';
@@ -31,7 +31,6 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
     const { handle } = params;
     const env = context.env as Env;
 
-    // Detect language from cookie for correct Shopify locale
     const cookieLang = request.headers.get('cookie')?.match(/cantine-lang=(fr|en)/)?.[1] ?? 'fr';
     const acceptLanguage = cookieLang === 'en' ? 'en-CA,en;q=0.9' : 'fr-CA,fr;q=0.9';
 
@@ -54,7 +53,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
                                     description(truncateAt: 2000)
                                     descriptionHtml
                                     vendor tags
-                                    images(first: 10) {
+                                    images(first: 20) {
                                         edges { node { url altText } }
                                     }
                                     variants(first: 10) {
@@ -121,6 +120,22 @@ export default function ProductDetail() {
     const [selectedVariant, setSelectedVariant] = useState(0);
     const [addedFeedback, setAddedFeedback] = useState(false);
 
+    const handleAddToCart = useCallback(() => {
+        if (!product) return;
+        const variant = product.variants[selectedVariant];
+        const priceAmt = parseFloat(variant?.price?.amount || '0');
+        const priceLabel = lang === 'fr' ? `${priceAmt.toFixed(2)} $` : `$${priceAmt.toFixed(2)}`;
+        addItem({
+            id: product.handle,
+            name: product.title,
+            price: priceAmt,
+            priceLabel,
+            image: product.images[0]?.url ?? null,
+        });
+        setAddedFeedback(true);
+        setTimeout(() => setAddedFeedback(false), 2200);
+    }, [product, selectedVariant, lang, addItem]);
+
     if (!product) {
         return (
             <>
@@ -149,43 +164,33 @@ export default function ProductDetail() {
     const priceLabel = lang === 'fr'
         ? `${priceAmt.toFixed(2)} $`
         : `$${priceAmt.toFixed(2)}`;
-
-    const handleAddToCart = () => {
-        addItem({
-            id: product.handle,
-            name: product.title,
-            price: priceAmt,
-            priceLabel,
-            image: product.images[0]?.url ?? null,
-        });
-        setAddedFeedback(true);
-        setTimeout(() => setAddedFeedback(false), 2000);
-    };
+    const isAvailable = variant?.availableForSale !== false;
 
     return (
         <>
             <Header />
 
-            {/* ── Breadcrumb ────────────────────────────────────────────── */}
+            {/* ── Breadcrumb ──────────────────────────────────────────────── */}
             <div className="pdp-breadcrumb">
                 <div className="container">
-                    <nav aria-label="breadcrumb">
+                    <nav aria-label="breadcrumb" className="pdp-breadcrumb-nav">
                         <Link to="/shop" className="pdp-breadcrumb-link">
-                            {lang === 'fr' ? '← Boutique' : '← Shop'}
+                            {lang === 'fr' ? 'Boutique' : 'Shop'}
                         </Link>
-                        <span className="pdp-breadcrumb-sep" aria-hidden="true">·</span>
+                        <span className="pdp-breadcrumb-sep" aria-hidden="true">/</span>
                         <span className="pdp-breadcrumb-current">{product.title}</span>
                     </nav>
                 </div>
             </div>
 
-            {/* ── Main Layout ───────────────────────────────────────────── */}
+            {/* ── Main PDP Layout ─────────────────────────────────────────── */}
             <section className="pdp-section">
                 <div className="container">
                     <div className="pdp-inner">
 
-                        {/* ── LEFT: Image Gallery ─────────────────────── */}
+                        {/* ══ LEFT: Gallery ═══════════════════════════════════ */}
                         <div className="pdp-gallery">
+
                             {/* Main image */}
                             <div className="pdp-main-image">
                                 {product.images.length > 0 ? (
@@ -203,7 +208,11 @@ export default function ProductDetail() {
 
                             {/* Thumbnail strip */}
                             {product.images.length > 1 && (
-                                <div className="pdp-thumbnails" role="list" aria-label={lang === 'fr' ? 'Galerie produit' : 'Product gallery'}>
+                                <div
+                                    className="pdp-thumbnails"
+                                    role="list"
+                                    aria-label={lang === 'fr' ? 'Galerie produit' : 'Product gallery'}
+                                >
                                     {product.images.map((img, i) => (
                                         <button
                                             key={i}
@@ -211,7 +220,7 @@ export default function ProductDetail() {
                                             role="listitem"
                                             className={`pdp-thumb${i === activeImage ? ' pdp-thumb--active' : ''}`}
                                             onClick={() => setActiveImage(i)}
-                                            aria-label={`${lang === 'fr' ? 'Image' : 'Image'} ${i + 1}`}
+                                            aria-label={`Image ${i + 1}`}
                                             aria-pressed={i === activeImage}
                                         >
                                             <img
@@ -225,29 +234,43 @@ export default function ProductDetail() {
                             )}
                         </div>
 
-                        {/* ── RIGHT: Product Info ──────────────────────── */}
+                        {/* ══ RIGHT: Product Info ══════════════════════════════ */}
                         <div className="pdp-info">
-                            {/* Vendor / origin */}
-                            {product.vendor && (
-                                <p className="pdp-vendor">
-                                    {product.vendor} · Puglia, Italie
-                                </p>
-                            )}
+
+                            {/* Origin label */}
+                            <div className="pdp-origin">
+                                <span className="pdp-origin-dot" aria-hidden="true" />
+                                <span>
+                                    {product.vendor
+                                        ? `${product.vendor} · Puglia, Italie`
+                                        : 'Puglia, Italie'}
+                                </span>
+                            </div>
 
                             {/* Title */}
                             <h1 className="pdp-title">{product.title}</h1>
 
-                            {/* Price & availability */}
+                            {/* Price row */}
                             <div className="pdp-price-row">
                                 <span className="pdp-price">{priceLabel}</span>
-                                {variant && !variant.availableForSale && (
+                                {!isAvailable && (
                                     <span className="pdp-out-of-stock">
                                         {lang === 'fr' ? 'Épuisé' : 'Out of stock'}
                                     </span>
                                 )}
                             </div>
 
-                            {/* Variant selector (only if multiple variants) */}
+                            {/* Description */}
+                            {product.descriptionHtml ? (
+                                <div
+                                    className="pdp-description"
+                                    dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                                />
+                            ) : product.description ? (
+                                <p className="pdp-description">{product.description}</p>
+                            ) : null}
+
+                            {/* Variant selector */}
                             {product.variants.length > 1 && (
                                 <div className="pdp-variants">
                                     <p className="pdp-variants-label">
@@ -269,25 +292,24 @@ export default function ProductDetail() {
                                 </div>
                             )}
 
-                            {/* Description */}
-                            {product.descriptionHtml ? (
-                                <div
-                                    className="pdp-description"
-                                    dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
-                                />
-                            ) : product.description ? (
-                                <p className="pdp-description">{product.description}</p>
-                            ) : null}
-
                             {/* Trust badges */}
                             <div className="pdp-badges">
-                                <span className="pdp-badge">🫒 100% Coratina</span>
-                                <span className="pdp-badge">
-                                    {lang === 'fr' ? '❄️ Pressée à froid' : '❄️ Cold-pressed'}
-                                </span>
-                                <span className="pdp-badge">
-                                    {lang === 'fr' ? '🚚 Livraison au Canada' : '🚚 Canada shipping'}
-                                </span>
+                                <div className="pdp-badge">
+                                    <span className="pdp-badge-icon">🫒</span>
+                                    <span>100% Coratina</span>
+                                </div>
+                                <div className="pdp-badge">
+                                    <span className="pdp-badge-icon">❄️</span>
+                                    <span>{lang === 'fr' ? 'Pressée à froid' : 'Cold-pressed'}</span>
+                                </div>
+                                <div className="pdp-badge">
+                                    <span className="pdp-badge-icon">🚚</span>
+                                    <span>{lang === 'fr' ? 'Livraison au Canada' : 'Canada shipping'}</span>
+                                </div>
+                                <div className="pdp-badge">
+                                    <span className="pdp-badge-icon">🌿</span>
+                                    <span>{lang === 'fr' ? 'Riche en polyphénols' : 'High polyphenols'}</span>
+                                </div>
                             </div>
 
                             {/* Add to cart */}
@@ -296,31 +318,67 @@ export default function ProductDetail() {
                                     type="button"
                                     className={`btn btn-filled pdp-atc-btn${addedFeedback ? ' pdp-atc-btn--added' : ''}`}
                                     onClick={handleAddToCart}
-                                    disabled={variant && !variant.availableForSale}
+                                    disabled={!isAvailable}
+                                    id="pdp-add-to-cart"
                                 >
                                     {addedFeedback
                                         ? (lang === 'fr' ? '✓ Ajouté au panier' : '✓ Added to cart')
-                                        : (variant && !variant.availableForSale
+                                        : (!isAvailable
                                             ? (lang === 'fr' ? 'Épuisé' : 'Out of stock')
                                             : t('product_cta')
                                         )
                                     }
                                 </button>
                                 <Link to="/shop" className="pdp-back-link">
-                                    {lang === 'fr' ? 'Voir tous les produits' : 'See all products'}
-                                    <span className="arrow"> →</span>
+                                    {lang === 'fr' ? '← Retour à la boutique' : '← Back to shop'}
                                 </Link>
                             </div>
 
                             {/* Tags */}
                             {product.tags.length > 0 && (
                                 <div className="pdp-tags">
-                                    {product.tags.map((tag) => (
+                                    {product.tags.map(tag => (
                                         <span key={tag} className="pdp-tag">{tag}</span>
                                     ))}
                                 </div>
                             )}
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ── Quality Callouts ──────────────────────────────────────────── */}
+            <section className="pdp-qualities-section">
+                <div className="container">
+                    <div className="pdp-qualities-grid">
+                        {[
+                            {
+                                num: '< 0,2%',
+                                label: lang === 'fr' ? 'Acidité' : 'Acidity',
+                                sub: lang === 'fr' ? 'Extra vierge certifiée' : 'Certified extra virgin',
+                            },
+                            {
+                                num: '24h',
+                                label: lang === 'fr' ? 'Après récolte' : 'After harvest',
+                                sub: lang === 'fr' ? 'Première pression à froid' : 'First cold press',
+                            },
+                            {
+                                num: '100%',
+                                label: 'Coratina',
+                                sub: lang === 'fr' ? 'Variété pure, Puglia' : 'Single variety, Puglia',
+                            },
+                            {
+                                num: '2024',
+                                label: lang === 'fr' ? 'Récolte' : 'Harvest',
+                                sub: lang === 'fr' ? 'Saison fraîche' : 'Fresh season',
+                            },
+                        ].map(item => (
+                            <div key={item.label} className="pdp-quality-item">
+                                <span className="pdp-quality-num">{item.num}</span>
+                                <span className="pdp-quality-label">{item.label}</span>
+                                <span className="pdp-quality-sub">{item.sub}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>

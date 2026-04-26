@@ -4,7 +4,6 @@ import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
 import { useI18n } from '~/lib/i18n';
 import { AnimatedSection, StaggerContainer } from '~/lib/animations';
-import { useCart } from '~/lib/cart';
 
 export const meta: MetaFunction = () => [
     { title: "Boutique — La Cantine" },
@@ -21,21 +20,23 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     const cookieLang = request.headers.get('cookie')?.match(/cantine-lang=(fr|en)/)?.[1] ?? 'fr';
     const acceptLanguage = cookieLang === 'en' ? 'en-CA,en;q=0.9' : 'fr-CA,fr;q=0.9';
 
-    // Try to fetch from Shopify if credentials are available
     if (env.PUBLIC_STOREFRONT_API_TOKEN && env.PUBLIC_STORE_DOMAIN) {
         try {
             const query = `
                 query GetProducts {
-                    products(first: 10) {
+                    products(first: 20) {
                         edges {
                             node {
                                 id
                                 handle
                                 title
-                                description
-                                featuredImage {
-                                    url
-                                    altText
+                                images(first: 2) {
+                                    edges {
+                                        node {
+                                            url
+                                            altText
+                                        }
+                                    }
                                 }
                                 variants(first: 1) {
                                     edges {
@@ -45,6 +46,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
                                                 amount
                                                 currencyCode
                                             }
+                                            availableForSale
                                         }
                                     }
                                 }
@@ -85,7 +87,6 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
         }
     }
 
-    // Return fallback signal (component will use hardcoded products)
     return { products: [], fromShopify: false };
 }
 
@@ -105,63 +106,61 @@ const FEATURES_EN = [
 
 export default function Shop() {
     const { t, lang } = useI18n();
-    const { addItem } = useCart();
     const { products: shopifyProducts, fromShopify } = useLoaderData<typeof loader>();
-    
+
     const features = lang === 'fr' ? FEATURES_FR : FEATURES_EN;
 
     // ── Hardcoded fallback products ──
     const fallbackProducts = [
         {
-            key: 'single',
+            key: 'huile-coratina-500ml',
+            handle: 'huile-coratina-500ml',
             name: t('product_single_name'),
-            size: t('product_single_size'),
-            desc: t('product_single_desc'),
             price: lang === 'fr' ? '35 $' : '$35',
             priceNote: lang === 'fr' ? '+ taxes' : '+ taxes',
             image: '/images/bottle.png',
-            badge: null,
-            details: lang === 'fr'
-                ? ['Variété : Coratina', 'Origine : Puglia, Italie', 'Format : 500 ml', 'Acidité : < 0,2 %']
-                : ['Variety: Coratina', 'Origin: Puglia, Italy', 'Format: 500 ml', 'Acidity: < 0.2%'],
+            hoverImage: null as string | null,
+            badge: null as string | null,
+            availableForSale: true,
         },
         {
-            key: 'bundle',
+            key: 'huile-coratina-bundle',
+            handle: 'huile-coratina-bundle',
             name: t('product_bundle_name'),
-            size: t('product_bundle_size'),
-            desc: t('product_bundle_desc'),
             price: lang === 'fr' ? '90 $' : '$90',
             priceNote: lang === 'fr' ? 'Économisez 15 $' : 'Save $15',
             image: '/images/bundle.png',
+            hoverImage: null as string | null,
             badge: t('product_bundle_badge'),
-            details: lang === 'fr'
-                ? ['3 × 500 ml', 'Idéal pour offrir', 'Livraison include', 'Économie de 15 $']
-                : ['3 × 500 ml', 'Perfect as a gift', 'Shipping included', 'Save $15'],
+            availableForSale: true,
         },
     ];
 
-    // ── Format Shopify products if available ──
-    const products = shopifyProducts.length > 0 
-        ? shopifyProducts.map((edge: any) => ({
-            key: edge.node.handle,
-            shopifyId: edge.node.id,
-            variantId: edge.node.variants?.edges?.[0]?.node?.id,
-            name: edge.node.title,
-            size: '',
-            desc: edge.node.description || '',
-            price: `$${parseFloat(edge.node.variants?.edges?.[0]?.node?.price?.amount || 0).toFixed(2)}`,
-            priceNote: '',
-            image: edge.node.featuredImage?.url,
-            badge: null,
-            details: [],
-        }))
+    // ── Format Shopify products ──
+    const products = shopifyProducts.length > 0
+        ? shopifyProducts.map((edge: any) => {
+            const images = edge.node.images?.edges ?? [];
+            const variant = edge.node.variants?.edges?.[0]?.node;
+            const priceAmt = parseFloat(variant?.price?.amount || '0');
+            return {
+                key: edge.node.handle,
+                handle: edge.node.handle,
+                name: edge.node.title,
+                price: lang === 'fr' ? `${priceAmt.toFixed(2)} $` : `$${priceAmt.toFixed(2)}`,
+                priceNote: '',
+                image: images[0]?.node?.url ?? null,
+                hoverImage: images[1]?.node?.url ?? null,
+                badge: null as string | null,
+                availableForSale: variant?.availableForSale ?? true,
+            };
+        })
         : fallbackProducts;
 
     return (
         <>
             <Header />
 
-            {/* ── Shop Header ───────────────────────────────────────────────── */}
+            {/* ── Shop Header ─────────────────────────────────────────────── */}
             <div className="shop-header">
                 <div className="container">
                     <AnimatedSection>
@@ -176,7 +175,7 @@ export default function Shop() {
                 </div>
             </div>
 
-            {/* ── Features Strip ────────────────────────────────────────────── */}
+            {/* ── Features Strip ──────────────────────────────────────────── */}
             <div
                 style={{
                     backgroundColor: 'var(--color-olive)',
@@ -184,15 +183,6 @@ export default function Shop() {
                 }}
             >
                 <div className="container">
-                    <div
-                        style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: 'var(--space-4)',
-                        }}
-                        className="hide-mobile"
-                        aria-hidden
-                    />
                     <div
                         style={{
                             display: 'flex',
@@ -237,111 +227,78 @@ export default function Shop() {
                 </div>
             </div>
 
-            {/* ── Products Grid ─────────────────────────────────────────────── */}
+            {/* ── Products Grid ────────────────────────────────────────────── */}
             <section className="section shop-body">
                 <div className="container">
-                    <StaggerContainer className="products-grid">
+                    <StaggerContainer className="shop-products-grid">
                         {products.map(product => (
-                            <article key={product.key} className="product-card">
-                                <div className="product-card-image">
+                            <Link
+                                key={product.key}
+                                to={`/products/${product.handle}`}
+                                className="shop-product-card"
+                                aria-label={product.name}
+                            >
+                                {/* Image */}
+                                <div className="shop-product-image">
                                     {product.image ? (
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            loading="lazy"
-                                        />
+                                        <>
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                loading="lazy"
+                                                className="shop-product-img shop-product-img--primary"
+                                            />
+                                            {product.hoverImage && (
+                                                <img
+                                                    src={product.hoverImage}
+                                                    alt={`${product.name} — vue alternative`}
+                                                    loading="lazy"
+                                                    className="shop-product-img shop-product-img--hover"
+                                                />
+                                            )}
+                                        </>
                                     ) : (
-                                        <div
-                                            className="product-card-image-placeholder"
-                                            aria-label={product.name}
-                                        >
+                                        <div className="shop-product-placeholder" aria-label={product.name}>
                                             🫙
                                         </div>
                                     )}
                                     {product.badge && (
-                                        <span className="product-card-badge badge badge--terra">
+                                        <span className="shop-product-badge badge badge--terra">
                                             {product.badge}
                                         </span>
                                     )}
+                                    {/* Hover CTA overlay */}
+                                    <div className="shop-product-overlay">
+                                        <span className="shop-product-overlay-btn">
+                                            {lang === 'fr' ? 'Voir le produit' : 'View product'}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="product-card-body">
-                                    <div className="product-card-top">
-                                        <div>
-                                            <h3 className="product-card-name">{product.name}</h3>
-                                            <p className="product-card-size">{product.size}</p>
-                                        </div>
-                                        <div style={{ textAlign: 'right' }}>
-                                            <span className="product-card-price">{product.price}</span>
+
+                                {/* Info */}
+                                <div className="shop-product-body">
+                                    <div className="shop-product-top">
+                                        <h3 className="shop-product-name">{product.name}</h3>
+                                        <div className="shop-product-price-col">
+                                            <span className="shop-product-price">{product.price}</span>
                                             {product.priceNote && (
-                                                <p
-                                                    style={{
-                                                        fontSize: 'var(--text-xs)',
-                                                        color: 'var(--color-terra)',
-                                                        marginTop: '2px',
-                                                    }}
-                                                >
-                                                    {product.priceNote}
-                                                </p>
+                                                <span className="shop-product-price-note">{product.priceNote}</span>
                                             )}
                                         </div>
                                     </div>
-
-                                    <p className="product-card-desc">{product.desc}</p>
-
-                                    <ul
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: 'var(--space-1)',
-                                            padding: 'var(--space-4) 0',
-                                            borderTop: '1px solid var(--color-border)',
-                                        }}
-                                    >
-                                        {product.details.map(detail => (
-                                            <li
-                                                key={detail}
-                                                style={{
-                                                    fontSize: 'var(--text-xs)',
-                                                    color: 'var(--color-gray)',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: 'var(--space-2)',
-                                                }}
-                                            >
-                                                <span
-                                                    style={{
-                                                        width: '3px',
-                                                        height: '3px',
-                                                        borderRadius: '50%',
-                                                        backgroundColor: 'var(--color-olive-light)',
-                                                        flexShrink: 0,
-                                                    }}
-                                                    aria-hidden="true"
-                                                />
-                                                {detail}
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                    <div className="product-card-footer">
-                                        <button
-                                            className="btn btn-filled"
-                                            style={{ flex: 1, justifyContent: 'center' }}
-                                            type="button"
-                                            onClick={() => addItem({
-                                                id: product.key,
-                                                name: product.name,
-                                                price: parseFloat(product.price.replace(/[^0-9.]/g, '')),
-                                                priceLabel: product.price,
-                                                image: product.image,
-                                                variantId: product.variantId ?? null,
-                                            })}
-                                        >
-                                            {t('add_to_cart')}
-                                        </button>
+                                    <div className="shop-product-footer">
+                                        {!product.availableForSale ? (
+                                            <span className="shop-product-sold-out">
+                                                {lang === 'fr' ? 'Épuisé' : 'Out of stock'}
+                                            </span>
+                                        ) : (
+                                            <span className="shop-product-cta-hint">
+                                                {lang === 'fr' ? 'Voir les détails →' : 'View details →'}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                            </article>
+                            </Link>
                         ))}
                     </StaggerContainer>
 
@@ -371,7 +328,7 @@ export default function Shop() {
                                 },
                                 {
                                     icon: '🇮🇹',
-                                    label: lang === 'fr' ? 'Importé d\'Italie' : 'Imported from Italy',
+                                    label: lang === 'fr' ? "Importé d'Italie" : 'Imported from Italy',
                                 },
                                 {
                                     icon: '🚚',
@@ -402,7 +359,7 @@ export default function Shop() {
                 </div>
             </section>
 
-            {/* ── CTA to recipes ────────────────────────────────────────────── */}
+            {/* ── CTA to recipes ──────────────────────────────────────────── */}
             <section className="section" style={{ backgroundColor: 'var(--color-bg-subtle)', textAlign: 'center' }}>
                 <div className="container container-text">
                     <AnimatedSection>
@@ -410,7 +367,7 @@ export default function Shop() {
                             {lang === 'fr' ? 'Inspirations' : 'Inspiration'}
                         </p>
                         <h2 className="heading-2" style={{ marginTop: 'var(--space-3)', marginBottom: 'var(--space-5)' }}>
-                            {lang === 'fr' ? 'Comment l\'utiliser ?' : 'How to use it?'}
+                            {lang === 'fr' ? "Comment l'utiliser ?" : 'How to use it?'}
                         </h2>
                         <p className="body-lg text-muted" style={{ marginBottom: 'var(--space-8)' }}>
                             {lang === 'fr'
