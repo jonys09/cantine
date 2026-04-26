@@ -3,7 +3,7 @@ import { Link, useLoaderData } from 'react-router';
 import { useState, useCallback } from 'react';
 import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
-import { useI18n } from '~/lib/i18n';
+import { useI18n, localizeProduct } from '~/lib/i18n';
 import { useCart } from '~/lib/cart';
 
 /* ── Types ────────────────────────────────────────────────────────────────── */
@@ -113,9 +113,10 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 /* ── Component ────────────────────────────────────────────────────────────── */
 export default function ProductDetail() {
-    const { product, lang } = useLoaderData<typeof loader>();
+    const { product: rawProduct } = useLoaderData<typeof loader>();
     const { addItem } = useCart();
-    const { t } = useI18n();
+    const { t, lang } = useI18n();
+    const product = localizeProduct(rawProduct, lang);
 
     const [activeImage, setActiveImage] = useState(0);
     const [selectedVariant, setSelectedVariant] = useState(0);

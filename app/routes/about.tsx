@@ -225,6 +225,11 @@ export default function About() {
                         <Link to="/shop" className="btn btn-filled">
                             {lang === 'fr' ? 'Découvrir Cantine' : 'Discover Cantine'}
                         </Link>
+                        <p className="body-sm text-muted" style={{ marginTop: 'var(--space-4)' }}>
+                            {lang === 'fr'
+                                ? "Explorez nos produits et découvrez une qualité qui se transmet."
+                                : "Explore our products and discover a quality that is passed down."}
+                        </p>
                     </AnimatedSection>
                 </div>
             </section>

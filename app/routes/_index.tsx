@@ -2,7 +2,7 @@ import type { MetaFunction, LoaderFunctionArgs } from 'react-router';
 import { Link, useLoaderData } from 'react-router';
 import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
-import { useI18n } from '~/lib/i18n';
+import { useI18n, localizeProduct } from '~/lib/i18n';
 import { AnimatedSection, StaggerContainer } from '~/lib/animations';
 import { useCart } from '~/lib/cart';
 import { PinterestBoard } from '~/components/PinterestBoard';

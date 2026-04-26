@@ -2,7 +2,7 @@ import type { MetaFunction, LoaderFunctionArgs } from 'react-router';
 import { Link, useLoaderData } from 'react-router';
 import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
-import { useI18n } from '~/lib/i18n';
+import { useI18n, localizeProduct } from '~/lib/i18n';
 import { AnimatedSection, StaggerContainer } from '~/lib/animations';
 
 export const meta: MetaFunction = () => [
@@ -145,7 +145,7 @@ export default function Shop() {
             return {
                 key: edge.node.handle,
                 handle: edge.node.handle,
-                name: edge.node.title,
+                name: localizeProduct(edge.node, lang).title,
                 price: lang === 'fr' ? `${priceAmt.toFixed(2)} $` : `$${priceAmt.toFixed(2)}`,
                 priceNote: '',
                 image: images[0]?.node?.url ?? null,

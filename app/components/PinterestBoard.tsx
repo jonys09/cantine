@@ -39,18 +39,13 @@ export function PinterestBoard() {
     return (
         <section className="section" style={{ backgroundColor: 'var(--color-bg)' }}>
             <div className="container">
-                <AnimatedSection style={{ textAlign: 'center', marginBottom: 'var(--space-10)' } as any}>
-                    <p className="eyebrow eyebrow--olive">
+                <AnimatedSection style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 'var(--space-8)' } as any}>
+                    <p className="eyebrow eyebrow--olive" style={{ justifyContent: 'center' }}>
                         {lang === 'fr' ? 'Vision' : 'Vision'}
                     </p>
-                    <h2 className="heading-2">
+                    <h2 className="heading-2" style={{ textAlign: 'center' }}>
                         {lang === 'fr' ? 'L\'Esthétique' : 'The Aesthetic'}
                     </h2>
-                    <p className="body-lg text-muted" style={{ maxWidth: '540px', margin: '0 auto' } as any}>
-                        {lang === 'fr'
-                            ? "L'essence de Cantine. Une sélection visuelle ancrée dans la terre, le temps long et la pureté des Pouilles."
-                            : "The essence of Cantine. A visual curation rooted in the land, unhurried time, and the purity of Puglia."}
-                    </p>
                 </AnimatedSection>
 
                 <AnimatedSection delay={0.2}>

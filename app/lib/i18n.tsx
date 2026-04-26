@@ -254,6 +254,50 @@ export function getT(lang: Lang) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   Shopify Product Localization Fallback
+   Since the Storefront API is not returning the published French/English
+   translations correctly (due to Shopify Admin Language settings), we
+   intercept and translate known products here.
+───────────────────────────────────────────────────────────────────────────── */
+
+const PRODUCT_TRANSLATIONS: Record<string, { title: Record<Lang, string>, description: Record<Lang, string> }> = {
+    'huile-dolive-coratina': {
+        title: {
+            fr: "Huile d'Olive Coratina",
+            en: "Coratina Olive Oil"
+        },
+        description: {
+            fr: "Huile d'Olive Extra Vierge – Coratina. Provenant des terres baignées de soleil du sud de l'Italie, cette huile d'olive extra vierge Coratina incarne toute l'intensité et l'élégance de son terroir natal. Son profil aromatique riche et raffiné sublime chaque plat, de la salade la plus simple à la cuisine la plus sophistiquée. En bouche, elle révèle une texture soyeuse, un équilibre remarquable et une finale délicatement relevée, témoignant de sa haute concentration en polyphénols.",
+            en: "Extra Virgin Olive Oil – Coratina Sourced from the sun-drenched lands of southern Italy, this Coratina extra virgin olive oil embodies the full intensity and elegance of its native terroir. Its rich and refined aromatic profile enhances every dish, from the simplest salad to the most sophisticated cuisine. On the palate, it reveals a silky texture, a remarkable balance, and a delicately lifted finish, reflecting its high concentration of polyphenols."
+        }
+    },
+    'coffret-3-bouteilles': {
+        title: {
+            fr: "Trio de 3 bouteilles",
+            en: "Trio of 3 Bottles"
+        },
+        description: {
+            fr: "Le choix idéal pour les amateurs ou pour offrir. Économisez tout en partageant l'excellence de notre région des Pouilles. Huile d'Olive Extra Vierge – Coratina. Provenant des terres baignées de soleil du sud de l'Italie, cette huile d'olive extra vierge Coratina incarne toute l'intensité et l'élégance de son terroir natal. Son profil aromatique riche et raffiné sublime chaque plat... En bouche, elle révèle une texture soyeuse, un équilibre remarquable et une finale délicatement relevée, témoignant de sa haute concentration en polyphénols.",
+            en: "The ideal choice for enthusiasts or as a gift. Save money while sharing the excellence of our Puglia region. Extra Virgin Olive Oil – Coratina Sourced from the sun-drenched lands of southern Italy, this Coratina extra virgin olive oil embodies the full intensity and elegance of its native terroir. Its rich and refined aromatic profile enhances every dish, from the simplest salad to the most sophisticated cuisine. On the palate, it reveals a silky texture, a remarkable balance, and a delicately lifted finish, reflecting its high concentration of polyphenols."
+        }
+    }
+};
+
+export function localizeProduct<T extends { handle?: string, title?: string, description?: string, descriptionHtml?: string }>(product: T, lang: Lang): T {
+    if (!product || !product.handle) return product;
+    const trans = PRODUCT_TRANSLATIONS[product.handle];
+    if (trans) {
+        return {
+            ...product,
+            title: trans.title[lang] || product.title,
+            description: trans.description[lang] || product.description,
+            descriptionHtml: trans.description[lang] ? `<p>${trans.description[lang]}</p>` : product.descriptionHtml
+        };
+    }
+    return product;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    Global subscriber pattern — bypasses React context entirely for reliability.
    Every component calling useI18n() subscribes directly; when changeLang fires,
    ALL subscribers re-render simultaneously.
