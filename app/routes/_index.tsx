@@ -5,7 +5,6 @@ import { Footer } from '~/components/Footer';
 import { useI18n, localizeProduct } from '~/lib/i18n';
 import { AnimatedSection, StaggerContainer } from '~/lib/animations';
 import { useCart } from '~/lib/cart';
-import { PinterestBoard } from '~/components/PinterestBoard';
 
 export const meta: MetaFunction = () => [
     { title: "La Cantine — Huile d'Olive Premium des Pouilles" },
@@ -78,7 +77,7 @@ const MARQUEE_ITEMS = {
         'PRESSÉE À FROID',
         'POUILLES, ITALIE',
         'POLYPHÉNOLS ÉLEVÉS',
-        'ACIDITÉ < 0,3 %',
+        'ACIDITÉ < 0,2 %',
         'RÉCOLTE À LA MAIN',
         'ARTISANAL',
         'LIVRAISON AU CANADA',
@@ -88,7 +87,7 @@ const MARQUEE_ITEMS = {
         'COLD-PRESSED',
         'PUGLIA, ITALY',
         'HIGH POLYPHENOLS',
-        'ACIDITY < 0.3%',
+        'ACIDITY < 0.2%',
         'HAND-HARVESTED',
         'ARTISANAL',
         'CANADA SHIPPING',
@@ -173,18 +172,15 @@ export default function Index() {
                 <div className="hero-overlay" aria-hidden="true" />
 
                 <div className="hero-content container">
-                    <p className="eyebrow">{t('hero_eyebrow')}</p>
+                    <p className="eyebrow" style={{ fontSize: '1rem' }}>{t('hero_eyebrow')}</p>
                     <h1 className="heading-display hero-headline">{t('hero_headline')}</h1>
 
                     <p style={{ fontSize: 'var(--text-sm)', color: 'rgba(250,248,242,0.70)', fontStyle: 'italic', marginTop: 'var(--space-2)', marginBottom: 'var(--space-2)', letterSpacing: '0.02em' }}>
                         {t('hero_tagline')}
                     </p>
                     <div className="hero-cta-row">
-                        <Link to="/shop" className="btn btn-cream">
-                            {t('hero_cta')}
-                        </Link>
-                        <Link to="/about" className="cta-link" style={{ color: 'rgba(250,248,242,0.80)' }}>
-                            {t('nav_story')} <span className="arrow">→</span>
+                        <Link to="/shop" className="cta-link" style={{ color: 'rgba(250,248,242,0.80)' }}>
+                            {t('hero_cta')} <span className="arrow">→</span>
                         </Link>
                     </div>
                 </div>
@@ -207,11 +203,11 @@ export default function Index() {
             <section className="section products-section">
                 <div className="container">
                     <AnimatedSection className="products-header">
-                        <p className="eyebrow eyebrow--olive">{t('products_eyebrow')}</p>
+                        {t('products_eyebrow') && <p className="eyebrow eyebrow--olive">{t('products_eyebrow')}</p>}
                         <h2 className="heading-2">{t('products_heading')}</h2>
                     </AnimatedSection>
 
-                    <StaggerContainer className="products-grid">
+                    <StaggerContainer className="products-grid" style={{ justifyContent: 'center' }}>
                         {products.map((product: any) => (
                             <article key={product.key} className="product-card">
                                 <div className="product-card-image">
@@ -243,34 +239,38 @@ export default function Index() {
                                             {product.badge}
                                         </span>
                                     )}
-                                </div>
-                                <div className="product-card-body">
-                                    <div className="product-card-top">
-                                        <div>
-                                            <h3 className="product-card-name">{product.name}</h3>
-                                            <p className="product-card-size">{product.size}</p>
-                                        </div>
-                                        <span className="product-card-price">{product.price}</span>
-                                    </div>
-                                    <div className="product-card-footer">
-                                        <button
-                                            className="btn btn-filled"
-                                            style={{ flex: 1, justifyContent: 'center' }}
-                                            type="button"
-                                            onClick={() => addItem({
+                                    <button
+                                        className="product-card-quick-add"
+                                        type="button"
+                                        aria-label={t('product_cta')}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            addItem({
                                                 id: product.key,
                                                 name: product.name,
                                                 price: product.priceNum,
                                                 priceLabel: product.price,
                                                 image: product.image,
-                                            })}
-                                        >
-                                            {t('product_cta')}
-                                        </button>
-                                        <Link to={`/products/${product.key}`} className="cta-link">
-                                            {t('product_view')} <span className="arrow">→</span>
-                                        </Link>
+                                            });
+                                        }}
+                                    >
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="9" cy="21" r="1"/>
+                                            <circle cx="20" cy="21" r="1"/>
+                                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                            <line x1="12" y1="10" x2="12" y2="16"/>
+                                            <line x1="9" y1="13" x2="15" y2="13"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div className="product-card-body">
+                                    <div className="product-card-top">
+                                        <h3 className="product-card-name">{product.name}</h3>
+                                        <span className="product-card-price" style={{ color: 'var(--color-gray)' }}>{product.price}</span>
                                     </div>
+                                    <Link to={`/products/${product.key}`} className="cta-link" style={{ justifyContent: 'center', marginTop: 'var(--space-2)' }}>
+                                        {t('product_view')} <span className="arrow">→</span>
+                                    </Link>
                                 </div>
                             </article>
                         ))}
@@ -278,99 +278,27 @@ export default function Index() {
                 </div>
             </section>
 
-            {/* ── Features Trust Strip ──────────────────────────────────────── */}
-            <div className="features-strip">
-                <div className="container">
-                    <StaggerContainer className="features-grid">
-                        {/* Variety */}
-                        <div className="feature-item">
-                            <svg className="feature-icon" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-                                <circle cx="19" cy="19" r="16" stroke="currentColor" strokeWidth="1.2" />
-                                <path d="M13 19l4 4 8-8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            <div>
-                                <p className="feature-title">100% Coratina</p>
-                                <p className="feature-sub">{lang === 'fr' ? 'Variété emblématique des Pouilles' : 'Iconic Puglian variety'}</p>
-                            </div>
-                        </div>
-                        {/* Cold press */}
-                        <div className="feature-item">
-                            <svg className="feature-icon" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-                                <path d="M19 6v26M6 19h26" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                                <circle cx="19" cy="19" r="5" stroke="currentColor" strokeWidth="1.2" />
-                                <path d="M10 10l4 4M28 10l-4 4M10 28l4-4M28 28l-4-4" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-                            </svg>
-                            <div>
-                                <p className="feature-title">{lang === 'fr' ? 'Pressée à froid' : 'Cold-Pressed'}</p>
-                                <p className="feature-sub">{lang === 'fr' ? 'Extraction à moins de 27 °C' : 'Extracted below 27 °C'}</p>
-                            </div>
-                        </div>
-                        {/* Acidity */}
-                        <div className="feature-item">
-                            <svg className="feature-icon" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-                                <path d="M14 6h10v16a5 5 0 0 1-10 0V6z" stroke="currentColor" strokeWidth="1.2" />
-                                <path d="M14 14h10" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-                                <path d="M14 10h10" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-                            </svg>
-                            <div>
-                                <p className="feature-title">{lang === 'fr' ? 'Acidité < 0,3 %' : 'Acidity < 0.3%'}</p>
-                                <p className="feature-sub">{lang === 'fr' ? 'Polyphénols exceptionnels' : 'Exceptional polyphenols'}</p>
-                            </div>
-                        </div>
-                        {/* Delivery */}
-                        <div className="feature-item">
-                            <svg className="feature-icon" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-                                <path d="M4 26h2m28 0h-6M4 26V16l8-8h14l8 8v10M4 26h24" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                                <circle cx="10" cy="26" r="3" stroke="currentColor" strokeWidth="1.2" />
-                                <circle cx="26" cy="26" r="3" stroke="currentColor" strokeWidth="1.2" />
-                            </svg>
-                            <div>
-                                <p className="feature-title">{lang === 'fr' ? 'Livraison au Canada' : 'Canada-Wide Shipping'}</p>
-                                <p className="feature-sub">{lang === 'fr' ? '1–7 jours ouvrables' : '1–7 business days'}</p>
-                            </div>
-                        </div>
-                    </StaggerContainer>
-                </div>
-            </div>
-
             {/* ── Story Teaser ──────────────────────────────────────────────── */}
             <section className="section story-section">
                 <div className="container">
                     <div className="story-inner">
-                        <AnimatedSection className="story-content">
-                            <p className="eyebrow">{t('story_eyebrow')}</p>
-                            <h2 className="heading-2">{t('story_heading')}</h2>
-                            <p className="body-lg">{t('story_p1')}</p>
-                            <p className="body-lg text-muted">{t('story_p2')}</p>
-                            <div className="story-stats">
-                                <div className="story-stat">
-                                    <p className="story-stat-num">{t('story_stat1_num')}</p>
-                                    <p className="story-stat-label">{t('story_stat1_label')}</p>
-                                </div>
-                                <div className="story-stat">
-                                    <p className="story-stat-num">{t('story_stat2_num')}</p>
-                                    <p className="story-stat-label">{t('story_stat2_label')}</p>
-                                </div>
-                                <div className="story-stat">
-                                    <p className="story-stat-num">{t('story_stat3_num')}</p>
-                                    <p className="story-stat-label">{t('story_stat3_label')}</p>
-                                </div>
-                                <div className="story-stat">
-                                    <p className="story-stat-num">{t('story_stat4_num')}</p>
-                                    <p className="story-stat-label">{t('story_stat4_label')}</p>
-                                </div>
-                            </div>
-                            <Link to="/about" className="btn">
-                                {t('story_cta')}
-                            </Link>
-                        </AnimatedSection>
-
                         <AnimatedSection delay={1} className="story-image">
                             <img
-                                src="/images/our_story_bottle.jpg"
+                                src="/images/bottle_tomato.jpg"
                                 alt={lang === 'fr' ? "Bouteille d'huile La Cantine avec tomates" : 'La Cantine olive oil bottle with tomatoes'}
                                 loading="lazy"
                             />
+                        </AnimatedSection>
+                        
+                        <AnimatedSection className="story-content">
+                            <p className="eyebrow">{t('story_eyebrow')}</p>
+                            <h2 className="heading-2">{t('story_heading')}</h2>
+                            <p>{t('story_p1')}</p>
+                            <p className="text-muted">{t('story_p2')}</p>
+                            
+                            <Link to="/about" className="btn" style={{ marginTop: 'var(--space-6)' }}>
+                                {t('story_cta')}
+                            </Link>
                         </AnimatedSection>
                     </div>
                 </div>
@@ -417,8 +345,6 @@ export default function Index() {
             </section>
 
             {/* Reviews removed per client request */}
-            {/* ── Pinterest Moodboard ───────────────────────────────────────── */}
-            <PinterestBoard />
 
             <Footer />
         </>

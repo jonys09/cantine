@@ -53,6 +53,7 @@ export function Header({ transparent = false }: { transparent?: boolean }) {
         { to: '/shop', label: t('nav_shop') },
         { to: '/about', label: t('nav_story') },
         { to: '/recipes', label: t('nav_recipes') },
+        { to: '/stores', label: t('nav_stores') },
         { to: '/livraison', label: t('nav_livraison') },
         { to: '/contact', label: lang === 'fr' ? 'Contact' : 'Contact' },
     ];

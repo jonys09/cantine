@@ -4,7 +4,6 @@ import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
 import { useI18n } from '~/lib/i18n';
 import { AnimatedSection, StaggerContainer } from '~/lib/animations';
-import { PinterestBoard } from '~/components/PinterestBoard';
 
 export const meta: MetaFunction = () => [
     { title: "Notre Histoire — La Cantine" },
@@ -18,36 +17,36 @@ export const meta: MetaFunction = () => [
 const PROCESS_FR = [
     {
         num: '01',
-        title: 'Récolte Manuelle',
-        desc: "En octobre-novembre, les olives Coratina sont récoltées à la main au pic de leur maturité. Cette méthode préserve les fruits et maximise les polyphénols.",
+        title: 'Récolte à maturité',
+        desc: "Récoltées au moment idéal, les olives conservent toute la richesse du fruit.",
     },
     {
         num: '02',
-        title: 'Pression à Froid',
-        desc: "Dans les 24h suivant la récolte, les olives sont pressées à froid au moulin Panorama Pieralisi. La température contrôlée préserve tous les arômes et nutriments.",
+        title: 'Pression à froid',
+        desc: "Pressées dans les 24 heures suivant la récolte, à température contrôlée, pour préserver arômes et nutriments.",
     },
     {
         num: '03',
-        title: 'Sélection Exigeante',
-        desc: "Chez Cantine, nous sélectionnons peu, mais avec exigence. Uniquement des producteurs qui travaillent avec attention, patience, et respect.",
+        title: 'Sélection exigeante',
+        desc: "Nous sélectionnons peu — mais avec exigence, guidés par l'attention, la patience et le respect.",
     },
 ];
 
 const PROCESS_EN = [
     {
         num: '01',
-        title: 'Hand Harvesting',
-        desc: "In October-November, Coratina olives are hand-picked at peak ripeness. This method preserves the fruit and maximizes polyphenols.",
+        title: 'Harvest at peak maturity',
+        desc: "Picked at the optimal moment, the olives retain the full richness of the fruit.",
     },
     {
         num: '02',
-        title: 'Cold Pressing',
-        desc: "Within 24 hours of harvest, the olives are cold-pressed at the Panorama Pieralisi mill. Controlled temperature preserves all aromas and nutrients.",
+        title: 'Cold Pressed',
+        desc: "Pressed within 24 hours of harvest, at controlled temperatures, to preserve aromas and nutrients.",
     },
     {
         num: '03',
-        title: 'Demanding Selection',
-        desc: "At Cantine, we select few, but with high standards. Only producers who work with attention, patience, and respect.",
+        title: 'Selective sourcing',
+        desc: "We select little — but with rigor, guided by attention, patience and respect.",
     },
 ];
 
@@ -63,8 +62,8 @@ export default function About() {
             <div className="page-hero">
                 <div className="container container-narrow">
                     <AnimatedSection>
-                        <p className="eyebrow">{t('story_eyebrow')}</p>
-                        <h1>{t('about_title')}</h1>
+                        <p className="eyebrow">{t('about_title')}</p>
+                        <h1>{t('story_eyebrow')}</h1>
                         <p className="page-hero-sub">{t('about_subtitle')}</p>
                     </AnimatedSection>
                 </div>
@@ -117,19 +116,7 @@ export default function About() {
             {/* ── Des Pouilles à Votre Table ────────────────────────────────── */}
             <section className="section" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <div className="container">
-                    <div className="about-split" style={{ flexDirection: 'row-reverse' } as React.CSSProperties}>
-                        <div className="about-image image-reveal">
-                            <img
-                                src="/images/farm_road.jpg"
-                                alt={
-                                    lang === 'fr'
-                                        ? "Domaines agricoles des Pouilles"
-                                        : 'Puglia farm lands'
-                                }
-                                loading="lazy"
-                            />
-                        </div>
-
+                    <div className="about-split">
                         <AnimatedSection className="about-body">
                             <p className="eyebrow eyebrow--olive">
                                 {lang === 'fr' ? 'Des Pouilles à Votre Table' : 'From Puglia to Your Table'}
@@ -148,6 +135,18 @@ export default function About() {
                                     : "Each harvest tells the story of families who know their land, their trees, and the time it takes to do things right. What we offer is not standardized. It is the continuation of a family story."}
                             </p>
                         </AnimatedSection>
+
+                        <div className="about-image image-reveal">
+                            <img
+                                src="/images/farm_road.jpg"
+                                alt={
+                                    lang === 'fr'
+                                        ? "Domaines agricoles des Pouilles"
+                                        : 'Puglia farm lands'
+                                }
+                                loading="lazy"
+                            />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -157,15 +156,25 @@ export default function About() {
                 <div className="container">
                     <AnimatedSection className="process-header">
                         <p className="eyebrow eyebrow--olive">
-                            {lang === 'fr' ? 'Notre Approche' : 'Our Approach'}
+                            {lang === 'fr' ? 'Notre approche' : 'Our Approach'}
                         </p>
                         <h2 className="heading-2">
                             {lang === 'fr' ? 'Le soin du détail, à chaque étape' : 'Care at every step'}
                         </h2>
                         <p style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center', color: 'var(--color-gray)' }}>
-                            {lang === 'fr'
-                                ? "Chez Cantine, nous croyons que les meilleurs produits sont ceux qui ont une origine claire et sincère. Nous sélectionnons peu, mais avec exigence. Nous privilégions des producteurs qui travaillent avec attention, patience, et respect de ce qui se transmet."
-                                : "At Cantine, we believe the best products are those with a clear and sincere origin. We select few, but with high standards. We favour producers who work with attention, patience, and respect for what is passed on."}
+                            {lang === 'fr' ? (
+                                <>
+                                    Chez Cantine, nous privilégions l'essentiel :<br />
+                                    une origine claire, des gestes maîtrisés et une exigence constante.<br />
+                                    Nous sélectionnons peu, mais avec précision.
+                                </>
+                            ) : (
+                                <>
+                                    At Cantine, we focus on what matters most:<br />
+                                    a clear origin, controlled processes and uncompromising standards.<br />
+                                    We select little but with precision.
+                                </>
+                            )}
                         </p>
                     </AnimatedSection>
 
@@ -181,27 +190,6 @@ export default function About() {
                 </div>
             </section>
 
-            {/* ── Stats Banner ──────────────────────────────────────────────── */}
-            <section className="section" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                <div className="container container-narrow">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-8)', textAlign: 'center' }}>
-                        {[
-                            { num: t('story_stat1_num'), label: t('story_stat1_label') },
-                            { num: t('story_stat2_num'), label: t('story_stat2_label') },
-                            { num: t('story_stat3_num'), label: t('story_stat3_label') },
-                            { num: t('story_stat4_num'), label: t('story_stat4_label') },
-                        ].map(stat => (
-                            <AnimatedSection key={stat.label}>
-                                <p className="story-stat-num" style={{ textAlign: 'center', marginBottom: 'var(--space-2)' }}>
-                                    {stat.num}
-                                </p>
-                                <p className="story-stat-label">{stat.label}</p>
-                            </AnimatedSection>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* ── L'Expérience Cantine ──────────────────────────────────────── */}
             <section className="section" style={{ backgroundColor: 'var(--color-bg)', textAlign: 'center' }}>
                 <div className="container container-narrow">
@@ -210,32 +198,21 @@ export default function About() {
                             {lang === 'fr' ? "L'Expérience Cantine" : 'The Cantine Experience'}
                         </p>
                         <h2 className="heading-2" style={{ marginBottom: 'var(--space-5)' }}>
-                            {lang === 'fr' ? 'Notre Engagement' : 'Our Commitment'}
+                            {lang === 'fr' ? 'Au-delà du produit, une intention.' : 'Beyond the product lies an intention.'}
                         </h2>
                         <p className="body-lg text-muted" style={{ maxWidth: '560px', margin: '0 auto var(--space-4)' }}>
                             {lang === 'fr'
-                                ? "Cantine va au-delà du produit. C'est une invitation à revenir à quelque chose de plus simple. Se rassembler. Partager. Prendre le temps. Comme autour d'une table familiale, où chaque détail compte."
-                                : "Cantine goes beyond the product. It is an invitation to return to something simpler. To gather. To share. To take the time. Like around a family table, where every detail matters."}
+                                ? "Revenir à l'essentiel. Ralentir. Partager. Revenir à l'essentiel."
+                                : "A return to the essential. Slow down. Share. Come back to what matters."}
                         </p>
                         <p style={{ fontStyle: 'italic', color: 'var(--color-olive)', fontWeight: 500, marginBottom: 'var(--space-8)' }}>
                             {lang === 'fr'
                                 ? "Si ce n'est pas exceptionnel, cela n'a pas sa place chez Cantine."
-                                : "If it is not exceptional, it has no place at Cantine."}
-                        </p>
-                        <Link to="/shop" className="btn btn-filled">
-                            {lang === 'fr' ? 'Découvrir Cantine' : 'Discover Cantine'}
-                        </Link>
-                        <p className="body-sm text-muted" style={{ marginTop: 'var(--space-4)' }}>
-                            {lang === 'fr'
-                                ? "Explorez nos produits et découvrez une qualité qui se transmet."
-                                : "Explore our products and discover a quality that is passed down."}
+                                : "If it isn't exceptional, it doesn't belong at Cantine."}
                         </p>
                     </AnimatedSection>
                 </div>
             </section>
-
-            {/* ── Pinterest Moodboard ───────────────────────────────────────── */}
-            <PinterestBoard />
 
             <Footer />
         </>

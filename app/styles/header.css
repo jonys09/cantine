@@ -270,11 +270,11 @@
 
 .mobile-nav-link {
     font-family: var(--font-serif);
-    font-size: var(--text-3xl);
+    font-size: var(--text-xl);
     color: var(--color-cream);
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.2;
-    padding: var(--space-4) 0;
+    padding: var(--space-3) 0;
     border-bottom: 1px solid rgba(250,248,242,0.12);
     display: block;
     transition: color var(--duration-normal) var(--ease-out),

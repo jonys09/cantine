@@ -36,6 +36,9 @@ type Pages = {
   "/contact": {
     params: {};
   };
+  "/stores": {
+    params: {};
+  };
   "/about": {
     params: {};
   };
@@ -56,7 +59,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/products/:handle" | "/recipes" | "/recipes/:slug" | "/api/checkout" | "/livraison" | "/contact" | "/about" | "/shop" | "/graphiql" | "/subrequest-profiler" | "/.well-known/appspecific/com.chrome.devtools.json";
+    page: "/" | "/products/:handle" | "/recipes" | "/recipes/:slug" | "/api/checkout" | "/livraison" | "/contact" | "/stores" | "/about" | "/shop" | "/graphiql" | "/subrequest-profiler" | "/.well-known/appspecific/com.chrome.devtools.json";
   };
   "routes/products.$handle.tsx": {
     id: "routes/products.$handle";
@@ -85,6 +88,10 @@ type RouteFiles = {
   "routes/_index.tsx": {
     id: "routes/_index";
     page: "/";
+  };
+  "routes/stores.tsx": {
+    id: "routes/stores";
+    page: "/stores";
   };
   "routes/about.tsx": {
     id: "routes/about";
@@ -125,6 +132,7 @@ type RouteModules = {
   "routes/livraison": typeof import("./app/routes/livraison.tsx");
   "routes/contact": typeof import("./app/routes/contact.tsx");
   "routes/_index": typeof import("./app/routes/_index.tsx");
+  "routes/stores": typeof import("./app/routes/stores.tsx");
   "routes/about": typeof import("./app/routes/about.tsx");
   "routes/shop": typeof import("./app/routes/shop.tsx");
   "/Users/jonysingla/Documents/dev/Websites/Cantine/node_modules/@shopify/hydrogen/dist/vite/virtual-routes/layout": unknown;

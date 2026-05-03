@@ -244,10 +244,10 @@ export default function Contact() {
                                             </p>
                                             <p className="contact-info-card-value">
                                                 <a
-                                                    href="mailto:bonjour@lacantine.ca"
+                                                    href="mailto:Info@cantineco.com"
                                                     style={{ color: 'var(--color-olive-mid)', textDecoration: 'underline', textUnderlineOffset: '2px' }}
                                                 >
-                                                    bonjour@lacantine.ca
+                                                    Info@cantineco.com
                                                 </a>
                                             </p>
                                         </div>
@@ -264,12 +264,12 @@ export default function Contact() {
                                             </p>
                                             <p className="contact-info-card-value">
                                                 <a
-                                                    href="https://instagram.com"
+                                                    href="https://instagram.com/lacantineco"
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     style={{ color: 'var(--color-olive-mid)', textDecoration: 'underline', textUnderlineOffset: '2px' }}
                                                 >
-                                                    @lacantine.olive
+                                                    @lacantineco
                                                 </a>
                                             </p>
                                         </div>

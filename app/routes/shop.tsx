@@ -14,6 +14,42 @@ export const meta: MetaFunction = () => [
     },
 ];
 
+const PROCESS_FR = [
+    {
+        num: '01',
+        title: 'Récolte à maturité',
+        desc: "Récoltées au moment idéal, les olives conservent toute la richesse du fruit.",
+    },
+    {
+        num: '02',
+        title: 'Pression à froid',
+        desc: "Pressées dans les 24 heures suivant la récolte, à température contrôlée, pour préserver arômes et nutriments.",
+    },
+    {
+        num: '03',
+        title: 'Sélection exigeante',
+        desc: "Nous sélectionnons peu — mais avec exigence, guidés par l'attention, la patience et le respect.",
+    },
+];
+
+const PROCESS_EN = [
+    {
+        num: '01',
+        title: 'Harvest at peak maturity',
+        desc: "Picked at the optimal moment, the olives retain the full richness of the fruit.",
+    },
+    {
+        num: '02',
+        title: 'Cold Pressed',
+        desc: "Pressed within 24 hours of harvest, at controlled temperatures, to preserve aromas and nutrients.",
+    },
+    {
+        num: '03',
+        title: 'Selective sourcing',
+        desc: "We select little — but with rigor, guided by attention, patience and respect.",
+    },
+];
+
 // ── Loader: Fetch products from Shopify (or fallback to hardcoded) ──
 export async function loader({ request, context }: LoaderFunctionArgs) {
     const env = context.env as Env;
@@ -90,25 +126,10 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     return { products: [], fromShopify: false };
 }
 
-const FEATURES_FR = [
-    { icon: '🫒', title: '100% Coratina', desc: 'Variété emblématique des Pouilles' },
-    { icon: '🧊', title: 'Pressée à Froid', desc: 'Première pression dans les 24h' },
-    { icon: '🌿', title: 'Polyphénols', desc: 'Concentration exceptionnelle' },
-    { icon: '🚚', title: 'Livraison au Canada', desc: '1–7 jours ouvrables' },
-];
-
-const FEATURES_EN = [
-    { icon: '🫒', title: '100% Coratina', desc: 'Iconic Puglian variety' },
-    { icon: '🧊', title: 'Cold Pressed', desc: 'First press within 24 hours' },
-    { icon: '🌿', title: 'Polyphenols', desc: 'Exceptional concentration' },
-    { icon: '🚚', title: 'Canada Shipping', desc: '1–7 business days' },
-];
-
 export default function Shop() {
     const { t, lang } = useI18n();
     const { products: shopifyProducts, fromShopify } = useLoaderData<typeof loader>();
-
-    const features = lang === 'fr' ? FEATURES_FR : FEATURES_EN;
+    const process = lang === 'fr' ? PROCESS_FR : PROCESS_EN;
 
     // ── Hardcoded fallback products ──
     const fallbackProducts = [
@@ -161,69 +182,21 @@ export default function Shop() {
             <Header />
 
             {/* ── Shop Header ─────────────────────────────────────────────── */}
-            <div className="shop-header">
+            <div className="shop-header" style={{
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("/images/shop_banner.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center 40%',
+                color: 'var(--color-cream)',
+                minHeight: '55vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
                 <div className="container">
                     <AnimatedSection>
-                        <p className="eyebrow eyebrow--olive">{t('products_eyebrow')}</p>
-                        <h1>{t('products_heading')}</h1>
-                        <p>
-                            {lang === 'fr'
-                                ? "Chaque produit est sélectionné avec soin pour vous offrir le meilleur de Puglia."
-                                : 'Each product is carefully selected to bring you the best of Puglia.'}
-                        </p>
+                        {t('products_eyebrow') && <p className="eyebrow" style={{ color: 'var(--color-cream)' }}>{t('products_eyebrow')}</p>}
+                        <h1 style={{ color: 'var(--color-cream)' }}>{t('products_heading')}</h1>
                     </AnimatedSection>
-                </div>
-            </div>
-
-            {/* ── Features Strip ──────────────────────────────────────────── */}
-            <div
-                style={{
-                    backgroundColor: 'var(--color-olive)',
-                    padding: 'var(--space-6) var(--container-padding)',
-                }}
-            >
-                <div className="container">
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            gap: 'var(--space-10)',
-                            flexWrap: 'wrap',
-                        }}
-                    >
-                        {features.map(f => (
-                            <div
-                                key={f.title}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 'var(--space-3)',
-                                    color: 'var(--color-cream)',
-                                }}
-                            >
-                                <span style={{ fontSize: '1.1rem' }}>{f.icon}</span>
-                                <div>
-                                    <p
-                                        style={{
-                                            fontSize: 'var(--text-sm)',
-                                            fontWeight: 500,
-                                            lineHeight: 1.2,
-                                        }}
-                                    >
-                                        {f.title}
-                                    </p>
-                                    <p
-                                        style={{
-                                            fontSize: 'var(--text-xs)',
-                                            color: 'rgba(250,248,242,0.65)',
-                                        }}
-                                    >
-                                        {f.desc}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
                 </div>
             </div>
 
@@ -232,73 +205,89 @@ export default function Shop() {
                 <div className="container">
                     <StaggerContainer className="shop-products-grid">
                         {products.map(product => (
-                            <Link
+                            <article
                                 key={product.key}
-                                to={`/products/${product.handle}`}
                                 className="shop-product-card"
                                 aria-label={product.name}
                             >
                                 {/* Image */}
                                 <div className="shop-product-image">
-                                    {product.image ? (
-                                        <>
-                                            <img
-                                                src={product.image}
-                                                alt={product.name}
-                                                loading="lazy"
-                                                className="shop-product-img shop-product-img--primary"
-                                            />
-                                            {product.hoverImage && (
+                                    <Link to={`/products/${product.handle}`} style={{ display: 'block', height: '100%' }}>
+                                        {product.image ? (
+                                            <>
                                                 <img
-                                                    src={product.hoverImage}
-                                                    alt={`${product.name} — vue alternative`}
+                                                    src={product.image}
+                                                    alt={product.name}
                                                     loading="lazy"
-                                                    className="shop-product-img shop-product-img--hover"
+                                                    className="shop-product-img shop-product-img--primary"
                                                 />
-                                            )}
-                                        </>
-                                    ) : (
-                                        <div className="shop-product-placeholder" aria-label={product.name}>
-                                            🫙
-                                        </div>
-                                    )}
+                                                {product.hoverImage && (
+                                                    <img
+                                                        src={product.hoverImage}
+                                                        alt={`${product.name} — vue alternative`}
+                                                        loading="lazy"
+                                                        className="shop-product-img shop-product-img--hover"
+                                                    />
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="shop-product-placeholder" aria-label={product.name}>
+                                                🫙
+                                            </div>
+                                        )}
+                                    </Link>
                                     {product.badge && (
                                         <span className="shop-product-badge badge badge--terra">
                                             {product.badge}
                                         </span>
                                     )}
-                                    {/* Hover CTA overlay */}
-                                    <div className="shop-product-overlay">
-                                        <span className="shop-product-overlay-btn">
-                                            {lang === 'fr' ? 'Voir le produit' : 'View product'}
-                                        </span>
-                                    </div>
+                                    <button
+                                        className="product-card-quick-add"
+                                        type="button"
+                                        aria-label={lang === 'fr' ? 'Ajouter au panier' : 'Add to cart'}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            addItem({
+                                                id: product.key,
+                                                name: product.name,
+                                                price: product.priceNum,
+                                                priceLabel: product.price,
+                                                image: product.image,
+                                            });
+                                        }}
+                                    >
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="9" cy="21" r="1"/>
+                                            <circle cx="20" cy="21" r="1"/>
+                                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                            <line x1="12" y1="10" x2="12" y2="16"/>
+                                            <line x1="9" y1="13" x2="15" y2="13"/>
+                                        </svg>
+                                    </button>
                                 </div>
 
                                 {/* Info */}
                                 <div className="shop-product-body">
                                     <div className="shop-product-top">
                                         <h3 className="shop-product-name">{product.name}</h3>
-                                        <div className="shop-product-price-col">
-                                            <span className="shop-product-price">{product.price}</span>
-                                            {product.priceNote && (
-                                                <span className="shop-product-price-note">{product.priceNote}</span>
-                                            )}
-                                        </div>
+                                        <span className="shop-product-price" style={{ color: 'var(--color-gray)' }}>{product.price}</span>
+                                        {product.priceNote && (
+                                            <span className="shop-product-price-note">{product.priceNote}</span>
+                                        )}
                                     </div>
-                                    <div className="shop-product-footer">
+                                    <div className="shop-product-footer" style={{ marginTop: 'var(--space-2)' }}>
                                         {!product.availableForSale ? (
                                             <span className="shop-product-sold-out">
                                                 {lang === 'fr' ? 'Épuisé' : 'Out of stock'}
                                             </span>
                                         ) : (
-                                            <span className="shop-product-cta-hint">
-                                                {lang === 'fr' ? 'Voir les détails →' : 'View details →'}
-                                            </span>
+                                            <Link to={`/products/${product.handle}`} className="cta-link" style={{ justifyContent: 'center' }}>
+                                                {lang === 'fr' ? 'Voir le produit' : 'View product'} <span className="arrow">→</span>
+                                            </Link>
                                         )}
                                     </div>
                                 </div>
-                            </Link>
+                            </article>
                         ))}
                     </StaggerContainer>
 
@@ -356,6 +345,45 @@ export default function Shop() {
                             ))}
                         </div>
                     </AnimatedSection>
+                </div>
+            </section>
+
+            {/* ── Notre Approche ────────────────────────────────────────────── */}
+            <section className="section process-section">
+                <div className="container">
+                    <AnimatedSection className="process-header">
+                        <p className="eyebrow eyebrow--olive">
+                            {lang === 'fr' ? 'Notre approche' : 'Our Approach'}
+                        </p>
+                        <h2 className="heading-2">
+                            {lang === 'fr' ? 'Le soin du détail, à chaque étape' : 'Care at every step'}
+                        </h2>
+                        <p style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center', color: 'var(--color-gray)' }}>
+                            {lang === 'fr' ? (
+                                <>
+                                    Chez Cantine, nous privilégions l'essentiel :<br />
+                                    une origine claire, des gestes maîtrisés et une exigence constante.<br />
+                                    Nous sélectionnons peu, mais avec précision.
+                                </>
+                            ) : (
+                                <>
+                                    At Cantine, we focus on what matters most:<br />
+                                    a clear origin, controlled processes and uncompromising standards.<br />
+                                    We select little but with precision.
+                                </>
+                            )}
+                        </p>
+                    </AnimatedSection>
+
+                    <StaggerContainer className="process-grid">
+                        {process.map(step => (
+                            <div key={step.num} className="process-step">
+                                <p className="process-step-num">{step.num}</p>
+                                <h4>{step.title}</h4>
+                                <p>{step.desc}</p>
+                            </div>
+                        ))}
+                    </StaggerContainer>
                 </div>
             </section>
 

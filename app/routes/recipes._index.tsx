@@ -4,7 +4,6 @@ import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
 import { useI18n } from '~/lib/i18n';
 import { AnimatedSection, StaggerContainer } from '~/lib/animations';
-import { PinterestBoard } from '~/components/PinterestBoard';
 
 export const meta: MetaFunction = () => [
     { title: "Recettes — La Cantine" },
@@ -177,9 +176,6 @@ export default function Recipes() {
                     </StaggerContainer>
                 </div>
             </section>
-
-            {/* ── Pinterest Moodboard ───────────────────────────────────────── */}
-            <PinterestBoard />
 
             {/* ── CTA to shop ───────────────────────────────────────────────── */}
             <section

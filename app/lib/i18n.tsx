@@ -8,19 +8,19 @@ const translations = {
         nav_shop: 'Boutique',
         nav_story: 'Notre Histoire',
         nav_recipes: 'Recettes',
-        nav_stores: 'Nous Trouver',
+        nav_stores: 'Points de vente',
         nav_cart: 'Panier',
 
         // Hero
         hero_eyebrow: 'Huile d\'Olive Premium — Pouilles, Italie',
-        hero_headline: 'L\'Or Liquide du Sud de l\'Italie',
+        hero_headline: 'Or liquide d\'Italie',
         hero_sub: 'Coratina DOP · Pressée à froid · Polyphénols exceptionnels',
         hero_cta: 'Découvrir',
         hero_scroll: 'Défiler',
 
         // Products
-        products_heading: 'Nos Produits',
-        products_eyebrow: 'Sélection Artisanale',
+        products_heading: 'Notre sélection',
+        products_eyebrow: '',
         product_single_name: 'Huile d\'Olive Coratina',
         product_single_size: '500 ml',
         product_single_desc: 'Notre huile signature 100% Coratina des Pouilles.',
@@ -36,15 +36,15 @@ const translations = {
 
         // Story
         story_eyebrow: 'Notre Histoire',
-        story_heading: 'Née d\'une passion pour l\'authenticité',
-        story_p1: 'La Cantine est née en 2023 d\'un désir simple : apporter au Québec l\'excellence de l\'huile d\'olive italienne artisanale. Chaque bouteille raconte l\'histoire des oliveraies centenaires des Pouilles.',
-        story_p2: 'Notre Coratina, variété emblématique de la région, est manipulée à la main et pressée à froid dans le moulin Panorama Pieralisi. Le résultat : une huile d\'une pureté et d\'une intensité incomparables.',
+        story_heading: 'La Cantine apporte au Québec depuis 2023 une huile d\'olive italienne d\'exception, sans compromis.',
+        story_p1: 'Notre Coratina est issue des Pouilles, récoltée à la main et pressée à froid pour capturer toute l\'intensité du fruit.',
+        story_p2: 'Pure, équilibrée, essentielle.',
         story_cta: 'Lire notre histoire',
         story_stat1_num: '2023',
         story_stat1_label: 'Fondation',
         story_stat2_num: '500+',
         story_stat2_label: 'Clients satisfaits',
-        story_stat3_num: '<2%',
+        story_stat3_num: '<0,2 %',
         story_stat3_label: 'Acidité',
         story_stat4_num: '100+ ans',
         story_stat4_label: 'Oliviers centenaires',
@@ -99,8 +99,8 @@ const translations = {
         hero_tagline: 'Une histoire de famille, de terre et de temps.',
 
         // About
-        about_title: 'Notre Histoire',
-        about_subtitle: 'De Puglia au Québec — une passion transmise en bouteille.',
+        about_title: 'De Puglia au Québec',
+        about_subtitle: 'Une passion transmise en bouteille.',
         nav_livraison: 'Livraison',
 
         // Cart
@@ -134,14 +134,14 @@ const translations = {
 
         // Hero
         hero_eyebrow: 'Premium Olive Oil — Puglia, Italy',
-        hero_headline: 'Liquid Gold from Southern Italy',
+        hero_headline: 'Italy\'s Liquid Gold',
         hero_sub: 'Coratina DOP · Cold-Pressed · Exceptional Polyphenols',
         hero_cta: 'Discover',
         hero_scroll: 'Scroll',
 
         // Products
-        products_heading: 'Our Products',
-        products_eyebrow: 'Artisanal Selection',
+        products_heading: 'Our Selection',
+        products_eyebrow: '',
         product_single_name: 'Coratina Olive Oil',
         product_single_size: '500 ml',
         product_single_desc: 'Our signature oil 100% Coratina from Puglia.',
@@ -157,15 +157,15 @@ const translations = {
 
         // Story
         story_eyebrow: 'Our Story',
-        story_heading: 'Born from a passion for authenticity',
-        story_p1: 'La Cantine was born in 2023 from a simple desire: to bring the excellence of artisanal Italian olive oil to Québec. Each bottle tells the story of the century-old olive groves of Puglia.',
-        story_p2: 'Our Coratina, the iconic variety of the region, is hand-harvested and cold-pressed at the Panorama Pieralisi mill. The result: an oil of unparalleled purity and intensity.',
+        story_heading: 'La Cantine has been bringing exceptional Italian olive oil to Quebec since 2023, without compromise.',
+        story_p1: 'Our Coratina comes from Puglia, hand-harvested and cold-pressed to capture the full intensity of the fruit.',
+        story_p2: 'Pure, balanced, essential.',
         story_cta: 'Read our story',
         story_stat1_num: '2023',
         story_stat1_label: 'Founded',
         story_stat2_num: '500+',
         story_stat2_label: 'Happy customers',
-        story_stat3_num: '<2%',
+        story_stat3_num: '<0.2%',
         story_stat3_label: 'Acidity',
         story_stat4_num: '100+ yrs',
         story_stat4_label: 'Century-old trees',
@@ -220,8 +220,8 @@ const translations = {
         hero_tagline: 'A story of family, land, and time.',
 
         // About
-        about_title: 'Our Story',
-        about_subtitle: 'From Puglia to Québec — a passion bottled.',
+        about_title: 'From Puglia to Canada',
+        about_subtitle: 'A passion bottled.',
         nav_livraison: 'Shipping',
 
         // Cart
@@ -267,8 +267,8 @@ const PRODUCT_TRANSLATIONS: Record<string, { title: Record<Lang, string>, descri
             en: "Coratina Olive Oil"
         },
         description: {
-            fr: "Huile d'Olive Extra Vierge – Coratina. Provenant des terres baignées de soleil du sud de l'Italie, cette huile d'olive extra vierge Coratina incarne toute l'intensité et l'élégance de son terroir natal. Son profil aromatique riche et raffiné sublime chaque plat, de la salade la plus simple à la cuisine la plus sophistiquée. En bouche, elle révèle une texture soyeuse, un équilibre remarquable et une finale délicatement relevée, témoignant de sa haute concentration en polyphénols.",
-            en: "Extra Virgin Olive Oil – Coratina Sourced from the sun-drenched lands of southern Italy, this Coratina extra virgin olive oil embodies the full intensity and elegance of its native terroir. Its rich and refined aromatic profile enhances every dish, from the simplest salad to the most sophisticated cuisine. On the palate, it reveals a silky texture, a remarkable balance, and a delicately lifted finish, reflecting its high concentration of polyphenols."
+            fr: "L'essence des Pouilles, en bouteille. Format 500 mL.<br/><br/>Une Coratina extra vierge, riche, équilibrée et profondément expressive. Une huile pensée pour sublimer chaque geste — du plus simple au plus précis.<br/><br/><strong>Profil</strong><br/>Texture soyeuse, bel équilibre et finale délicatement relevée, signature de sa richesse en polyphénols.<br/><br/><strong>Récolte</strong><br/>Novembre – Décembre 2025",
+            en: "The essence of Puglia, bottled. 500 mL format.<br/><br/>A Coratina extra virgin olive oil — rich, balanced, and deeply expressive. An oil crafted to elevate every gesture, from the simplest to the most precise.<br/><br/><strong>Profile</strong><br/>Silky texture, beautifully balanced, with a delicately lifted finish — a signature of its high polyphenol content.<br/><br/><strong>Harvest</strong><br/>November – December 2025"
         }
     },
     'coffret-3-bouteilles': {
