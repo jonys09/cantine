@@ -13,6 +13,20 @@
     background-color: #0e0e0a;
 }
 
+@media (max-width: 768px) {
+    .hero {
+        align-items: center;
+    }
+    .hero-content {
+        padding-bottom: var(--space-10);
+        text-align: left;
+    }
+    .hero-headline {
+        white-space: normal;
+        font-size: clamp(2.4rem, 9vw, 3.6rem);
+    }
+}
+
 .hero-bg {
     position: absolute;
     inset: 0;
@@ -1498,6 +1512,31 @@
     z-index: 3;
 }
 
+/* Presale bubble — top-left corner of any product image (shared across all pages) */
+.presale-badge {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: 4;
+    background-color: var(--color-terra);
+    color: var(--color-white);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 5px 11px;
+    border-radius: 99px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    pointer-events: none;
+    animation: presale-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes presale-pulse {
+    0%, 100% { box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
+    50%       { box-shadow: 0 4px 16px rgba(196, 96, 58, 0.50); }
+}
+
 /* Hover CTA overlay */
 .shop-product-overlay {
     position: absolute;
@@ -1650,6 +1689,12 @@
     gap: var(--space-4);
     position: sticky;
     top: calc(68px + var(--space-6));
+}
+
+@media (max-width: 768px) {
+    .pdp-gallery {
+        position: static;
+    }
 }
 
 .pdp-main-image {

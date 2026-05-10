@@ -66,6 +66,9 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
                                 id
                                 handle
                                 title
+                                metafield(namespace: "custom", key: "presale") {
+                                    value
+                                }
                                 images(first: 2) {
                                     edges {
                                         node {
@@ -163,6 +166,7 @@ export default function Shop() {
             const images = edge.node.images?.edges ?? [];
             const variant = edge.node.variants?.edges?.[0]?.node;
             const priceAmt = parseFloat(variant?.price?.amount || '0');
+            const presaleValue = edge.node.metafield?.value ?? null;
             return {
                 key: edge.node.handle,
                 handle: edge.node.handle,
@@ -172,6 +176,7 @@ export default function Shop() {
                 image: images[0]?.node?.url ?? null,
                 hoverImage: images[1]?.node?.url ?? null,
                 badge: null as string | null,
+                presale: presaleValue === 'Yes',
                 availableForSale: variant?.availableForSale ?? true,
             };
         })
@@ -185,9 +190,9 @@ export default function Shop() {
             <div className="shop-header" style={{
                 backgroundImage: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("/images/shop_banner.jpg")',
                 backgroundSize: 'cover',
-                backgroundPosition: 'center 40%',
+                backgroundPosition: 'center 55%',
                 color: 'var(--color-cream)',
-                minHeight: '55vh',
+                minHeight: '75vh',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -236,6 +241,12 @@ export default function Shop() {
                                             </div>
                                         )}
                                     </Link>
+                                    {/* Presale badge — top left, only when metafield = Yes */}
+                                    {(product as any).presale && (
+                                        <span className="presale-badge">
+                                            {lang === 'fr' ? 'Prévente' : 'Pre-sale'}
+                                        </span>
+                                    )}
                                     {product.badge && (
                                         <span className="shop-product-badge badge badge--terra">
                                             {product.badge}

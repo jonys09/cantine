@@ -54,6 +54,9 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
                                     description(truncateAt: 2000)
                                     descriptionHtml
                                     vendor tags
+                                    metafield(namespace: "custom", key: "presale") {
+                                        value
+                                    }
                                     images(first: 20) {
                                         edges { node { url altText } }
                                     }
@@ -89,7 +92,8 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
                         tags: p.tags,
                         vendor: p.vendor,
                     };
-                    return { product, lang: cookieLang };
+                    const presale = p.metafield?.value === 'Yes';
+                    return { product, lang: cookieLang, presale };
                 }
             }
         } catch {
@@ -97,7 +101,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
         }
     }
 
-    return { product: null, lang: cookieLang };
+    return { product: null, lang: cookieLang, presale: false };
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -113,7 +117,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 /* ── Component ────────────────────────────────────────────────────────────── */
 export default function ProductDetail() {
-    const { product: rawProduct } = useLoaderData<typeof loader>();
+    const { product: rawProduct, presale } = useLoaderData<typeof loader>();
     const { addItem } = useCart();
     const { t, lang } = useI18n();
     const product = localizeProduct(rawProduct, lang);
@@ -221,6 +225,11 @@ export default function ProductDetail() {
                                                     &rarr;
                                                 </button>
                                             </>
+                                        )}
+                                        {presale && activeImage === 0 && (
+                                            <span className="presale-badge">
+                                                {lang === 'fr' ? 'Prévente' : 'Pre-sale'}
+                                            </span>
                                         )}
                                     </>
                                 ) : (

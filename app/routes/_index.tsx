@@ -38,6 +38,9 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
                                     node {
                                         id handle title description
                                         featuredImage { url altText }
+                                        metafield(namespace: "custom", key: "presale") {
+                                            value
+                                        }
                                         images(first: 2) {
                                             edges { node { url altText } }
                                         }
@@ -139,6 +142,7 @@ export default function Index() {
                 image: imgEdges[0]?.node?.url || edge.node.featuredImage?.url || null,
                 hoverImage: imgEdges[1]?.node?.url || null,
                 badge: null,
+                presale: edge.node.metafield?.value === 'Yes',
                 variantId: edge.node.variants?.edges?.[0]?.node?.id || null,
             };
         })
@@ -237,6 +241,11 @@ export default function Index() {
                                     {product.badge && (
                                         <span className="product-card-badge badge badge--terra">
                                             {product.badge}
+                                        </span>
+                                    )}
+                                    {product.presale && (
+                                        <span className="presale-badge">
+                                            {lang === 'fr' ? 'Prévente' : 'Pre-sale'}
                                         </span>
                                     )}
                                     <button

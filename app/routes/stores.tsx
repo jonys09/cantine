@@ -28,71 +28,88 @@ type Store = {
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
     const env = context.env as any;
-    
-    // Default fallback store
+
     const fallbackStores: Store[] = [];
 
-    if (env.PUBLIC_STOREFRONT_API_TOKEN && env.PUBLIC_STORE_DOMAIN) {
-        try {
-            const query = `
-                query GetStores {
-                    metaobjects(type: "store_location", first: 50) {
-                        edges {
-                            node {
-                                id
-                                fields {
-                                    key
-                                    value
-                                }
+    if (!env.PUBLIC_STOREFRONT_API_TOKEN || !env.PUBLIC_STORE_DOMAIN) {
+        console.error('[stores] ❌ Missing env vars — TOKEN:', !!env.PUBLIC_STOREFRONT_API_TOKEN, 'DOMAIN:', !!env.PUBLIC_STORE_DOMAIN);
+        return { stores: fallbackStores, fromShopify: false, debug: 'missing_env' };
+    }
+
+    try {
+        const query = `
+            query GetStores {
+                metaobjects(type: "store_locations", first: 50) {
+                    edges {
+                        node {
+                            id
+                            fields {
+                                key
+                                value
                             }
                         }
                     }
                 }
-            `;
-
-            const response = await fetch(
-                `https://${env.PUBLIC_STORE_DOMAIN}/api/2024-01/graphql.json`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Shopify-Storefront-Access-Token': env.PUBLIC_STOREFRONT_API_TOKEN,
-                    },
-                    body: JSON.stringify({ query }),
-                }
-            );
-
-            if (response.ok) {
-                const data = await response.json() as any;
-                if (!data.errors && data.data?.metaobjects?.edges) {
-                    const shopifyStores = data.data.metaobjects.edges.map((edge: any) => {
-                        const fields = edge.node.fields;
-                        const getValue = (key: string) => fields.find((f: any) => f.key === key)?.value || '';
-                        
-                        return {
-                            id: edge.node.id,
-                            name: getValue('store_name') || getValue('name') || 'Unnamed Store',
-                            address: getValue('address'),
-                            city: getValue('city'),
-                            postal: getValue('postal_code') || getValue('postal'),
-                            province: getValue('province'),
-                            phone: getValue('phone'),
-                            lat: parseFloat(getValue('latitude')) || 45.5017,
-                            lng: parseFloat(getValue('longitude')) || -73.5673,
-                        };
-                    });
-
-                    if (shopifyStores.length > 0) {
-                        return { stores: shopifyStores, fromShopify: true };
-                    }
-                }
             }
-        } catch (error) {
-            console.warn('Could not fetch stores from Shopify, using fallback:', error);
-        }
-    }
+        `;
 
-    return { stores: fallbackStores, fromShopify: false };
+        const apiUrl = `https://${env.PUBLIC_STORE_DOMAIN}/api/2024-01/graphql.json`;
+        console.log('[stores] Fetching from:', apiUrl);
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Shopify-Storefront-Access-Token': env.PUBLIC_STOREFRONT_API_TOKEN,
+            },
+            body: JSON.stringify({ query }),
+        });
+
+        console.log('[stores] HTTP status:', response.status);
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error('[stores] ❌ HTTP error:', response.status, text.slice(0, 500));
+            return { stores: fallbackStores, fromShopify: false, debug: `http_${response.status}`, debugDetail: text.slice(0, 300) };
+        }
+
+        const data = await response.json() as any;
+
+        if (data.errors) {
+            console.error('[stores] ❌ GraphQL errors:', JSON.stringify(data.errors));
+            return { stores: fallbackStores, fromShopify: false, debug: 'graphql_errors', debugDetail: JSON.stringify(data.errors).slice(0, 500) };
+        }
+
+        const edges = data.data?.metaobjects?.edges;
+        console.log('[stores] ✅ metaobjects edges count:', edges?.length ?? 'undefined');
+
+        if (!edges || edges.length === 0) {
+            return { stores: fallbackStores, fromShopify: false, debug: 'empty_edges', debugDetail: JSON.stringify(data.data).slice(0, 300) };
+        }
+
+        const shopifyStores = edges.map((edge: any) => {
+            const fields = edge.node.fields;
+            const getValue = (key: string) => fields.find((f: any) => f.key === key)?.value || '';
+
+            return {
+                id: edge.node.id,
+                name: getValue('store_name') || getValue('name') || 'Unnamed Store',
+                address: getValue('address'),
+                city: getValue('city') || getValue('cith'),
+                postal: getValue('postal_code') || getValue('postal'),
+                province: getValue('province'),
+                phone: getValue('phone'),
+                lat: parseFloat(getValue('lat') || getValue('latitude')) || 45.5017,
+                lng: parseFloat(getValue('long') || getValue('longitude')) || -73.5673,
+            };
+        });
+
+        return { stores: shopifyStores, fromShopify: true };
+
+    } catch (error) {
+        console.error('[stores] ❌ Fetch exception:', error);
+        return { stores: fallbackStores, fromShopify: false, debug: 'exception', debugDetail: String(error) };
+    }
 }
 
 export default function Stores() {
@@ -115,9 +132,9 @@ export default function Stores() {
             <div className="shop-header" style={{
                 backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/find_us_banner.jpg")',
                 backgroundSize: 'cover',
-                backgroundPosition: 'center 30%',
+                backgroundPosition: 'center 55%',
                 color: 'var(--color-cream)',
-                minHeight: '55vh',
+                minHeight: '78vh',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
